@@ -1,47 +1,28 @@
-import os
 import cv2
 import numpy as np
-from sklearn.model_selection import train_test_split
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
 from tensorflow.keras.models import load_model
 
-data_dir = r'.\img\train'
-classes = os.listdir(data_dir)
+# Завантаження навченої моделі з файлу model.h5
+loaded_model = load_model('model.h5')
 
-images = []
-labels = []
+# Зчитуємо зображення номерного знака
+plate_image = cv2.imread(r'\img\foto\eu1.jpg')
+plate_image = cv2.resize(plate_image, (32, 32))
+plate_image = np.array(plate_image) / 255.0  # Нормалізація
 
-for idx, class_name in enumerate(classes):
-    class_dir = os.path.join(data_dir, class_name)
-    for image_name in os.listdir(class_dir):
-        image_path = os.path.join(class_dir, image_name)
-        image = cv2.imread(image_path)
-        image = cv2.resize(image, (32, 32))
-        images.append(image)
-        labels.append(idx)
+# Отримання прогнозу моделі для зображення номерного знака
+plate_text_prob = loaded_model.predict(np.expand_dims(plate_image, axis=0))
 
-images = np.array(images) / 255.0
-labels = np.array(labels)
+# Отримання індексу максимального значення
+max_prob_index = np.argmax(plate_text_prob)
 
-X_train, X_test, y_train, y_test = train_test_split(images, labels, test_size=0.2, random_state=42)
+# Перевірка, чи індекс належить допустимим класам (цифри та літери)
+if max_prob_index >= 0 and max_prob_index <= 35:
+    if max_prob_index <= 9:
+        predicted_class = str(max_prob_index)  # Цифра
+    else:
+        predicted_class = chr(ord('A') + (max_prob_index - 10))  # Літера
+else:
+    predicted_class = 'Неможливо розпізнати'
 
-model = Sequential([
-    Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)),
-    MaxPooling2D((2, 2)),
-    Conv2D(64, (3, 3), activation='relu'),
-    MaxPooling2D((2, 2)),
-    Flatten(),
-    Dense(128, activation='relu'),
-    Dense(len(classes), activation='softmax')
-])
-
-model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-model.fit(X_train, y_train, epochs=20, validation_data=(X_test, y_test))
-
-model.save(r'C:\Users\chorn\VisionPark\datascince\img\model.h5')
-
-loaded_model = load_model(r'C:\Users\chorn\VisionPark\datascince\img\model.h5')
-
-test_loss, test_acc = loaded_model.evaluate(X_test, y_test)
-print('Точність на тестовому наборі:', test_acc)
+print('Прогнозована мітка класу для номерного знака:', predicted_class)

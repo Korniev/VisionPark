@@ -1,28 +1,44 @@
 import cv2
 import numpy as np
+import matplotlib.pyplot as plt
+import imutils
 from tensorflow.keras.models import load_model
 
+model = load_model('model.h5')
 
-model = load_model(r'C:\Users\chorn\VisionPark\datascince\img\model.h5')
+img = cv2.imread(r'.\img\foto\eu1.jpg')
 
-# Шлях до вхідного зображення автомобіля
-input_image_path = r'C:\Users\chorn\VisionPark\datascince\img\foto\eu1.jpg'
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+plt.imshow(gray, cmap='gray')
+plt.show()
 
-# Завантаження вхідного зображення автомобіля
-input_image = cv2.imread(input_image_path)
+bfilter = cv2.bilateralFilter(gray, 11, 17, 17)
+edged = cv2.Canny(bfilter, 30, 200)
+plt.imshow(edged, cmap='gray')
+plt.show()
 
-# Визначення області номерного знаку на зображенні автомобіля (припустимо, що ви вже маєте цю область)
-license_plate_region = input_image[y1:y2, x1:x2]  # Замініть x1, y1, x2, y2 координатами області номерного знаку
+keypoints = cv2.findContours(edged.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+contours = imutils.grab_contours(keypoints)
+contours = sorted(contours, key=cv2.contourArea, reverse=True)[:10]
 
-# Зміна розміру та нормалізація зображення номерного знаку
-license_plate_resized = cv2.resize(license_plate_region, (32, 32)) / 255.0
+location = None
+for contour in contours:
+    approx = cv2.approxPolyDP(contour, 10, True)
+    if len(approx) == 4:
+        location = approx
+        break
 
-# Передача зображення через модель для розпізнавання номерного знаку
-prediction = model.predict(np.array([license_plate_resized]))
+mask = np.zeros(gray.shape, np.uint8)
+new_image = cv2.drawContours(mask, [location], 0, 255, -1)
+new_image = cv2.bitwise_and(img, img, mask=mask)
 
-# Отримання розпізнаного тексту (припустимо, що маємо класи 'A', 'B', 'C' ... '9' для розпізнавання)
-classes = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-predicted_class_idx = np.argmax(prediction)
-recognized_text = classes[predicted_class_idx]
+plt.imshow(cv2.cvtColor(new_image, cv2.COLOR_BGR2RGB))
+plt.show()
 
-print("Розпізнаний текст з номерного знаку:", recognized_text)
+(x, y) = np.where(mask == 255)
+(x1, y1) = (np.min(x), np.min(y))
+(x2, y2) = (np.max(x), np.max(y))
+cropped_image = gray[x1:x2 + 1, y1:y2 + 1]
+
+plt.imshow(cv2.cvtColor(cropped_image, cv2.COLOR_BGR2RGB))
+plt.show()
