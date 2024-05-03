@@ -33,5 +33,5 @@ venv\Scripts\activate
 5. Install the dependencies localy
 
 ```bash
-pip install -r requirement.txt
+pip install -r requirements.txt
 ```
