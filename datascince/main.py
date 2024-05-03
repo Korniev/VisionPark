@@ -8,7 +8,7 @@ from tensorflow.keras.models import load_model
 
 model = load_model('model.keras')
 
-img = cv2.imread(r'./img/foto/eu1.jpg')
+img = cv2.imread(r'./img/foto/eu2.jpg')
 
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 plt.imshow(gray, cmap='gray')
@@ -90,6 +90,6 @@ if len(prepared_symbols) > 0:
     predictions = model.predict(prepared_symbols)
     predicted_classes = np.argmax(predictions, axis=1)
     predicted_class_labels = [classes[idx] for idx in predicted_classes]
-    print("Класифіковані символи:", predicted_class_labels)
+    print("Classified symbols:", predicted_class_labels)
 else:
-    print("Жодного символу не виявлено.")
+    print("No ones symbols found.")
