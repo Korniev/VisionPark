@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 import imutils
 from tensorflow.keras.models import load_model
 
-model = load_model('model.keras')
+model = load_model('best.pt')
 
-img = cv2.imread(r'./img/foto/eu2.jpg')
+img = cv2.imread(r'./img/foto/eu4.jpg')
 
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 plt.imshow(gray, cmap='gray')
