@@ -1,0 +1,41 @@
+{% extends "vision_park/base.html" %}
+{% block content %}
+{% load static %}
+<div class="container">
+  <div class="row" style="margin-top: 50px;">
+    <!-- <div class="col-md-4">
+            <div class="card bg-primary">
+                <div class="card-body">
+                    <a href="{% url 'recognize:upload' %}" class="btn btn-primary btn-lg btn-block">Upload photo of car</a>
+                </div>
+            </div>
+        </div> -->
+    <div class="col-md-4">
+      <!-- <div class="card bg-primary"> -->
+        <div class="card-body mx-auto text-center">
+          <a href="{% url 'recognize:upload' %}?type=0" class="btn btn-lg btn-block">
+            <img style="width: 100%;"
+              src="{% static 'recognize/logo-compressed2.jpg' %}"
+              title="Upload IN photo of car"
+              alt="Upload IN photo of car"
+          /></a>
+          <p>Upload IN photo of car</p>
+        </div>
+      <!-- </div> -->
+    </div>
+    <div class="col-md-4">
+      <!-- <div class="card bg-success"> -->
+        <div class="card-body mx-auto text-center">
+          <a href="{% url 'recognize:upload' %}?type=1" class="btn btn-lg btn-block"
+            ><img style="width: 100%;"
+              src="{% static 'recognize/logo-compressed3.jpg' %}"
+              title="Upload OUT photo of car"
+              alt="Upload OUT photo of car"
+          /></a>
+          <p>Upload OUT photo of car</p>
+        </div>
+      <!-- </div> -->
+    </div>
+  </div>
+</div>
+{% endblock content %}

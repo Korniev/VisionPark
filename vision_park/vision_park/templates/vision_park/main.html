@@ -1,0 +1,30 @@
+{% extends 'vision_park/base.html' %}
+
+{% block title %}
+Ase of Base
+{% endblock %}
+
+{% block content %}
+{% load static %}
+<div class="container mt-3">
+    <h2>ASE OF BASE</h2>
+
+    {% for message in messages %}
+        <h3 class="justify-content-center" style="margin-left: 0px; margin-bottom: 30px"> {{ message }}</h3>
+    {% endfor %}
+
+    {% if user.is_authenticated %}
+    <div class="quote" style="margin-top: 30px;" itemscope="" itemtype="http://schema.org/CreativeWork">
+        <h3>Вітаємо {{ request.user }} у Neural Parking!</h3>
+    </div>
+    {% else %}
+    <div class="quote" style="margin-top: 30px;" itemscope="" itemtype="http://schema.org/CreativeWork">
+        <h3>Welcome!</h3>
+        <h4>To start using <b>Neural Parking</b>, You must log in to your account!</h4>
+    </div>
+    {% endif %}
+
+    <img style="margin-top: 30px;" src="{% static 'vision_park/logo-compressed1.jpg' %}" alt="Main Logo" class="rounded-logo">
+</div>
+
+{% endblock %}

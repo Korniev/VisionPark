@@ -1,0 +1,29 @@
+{% extends "vision_park/base.html" %}
+{% block content %}
+
+<div class="px-1 my-2 text-center">
+  <h3 class="display-6 fw-bold">Fast Parking - Швидка паркова</h3>
+  <div class="col-lg-8 mx-auto">
+    <div class="mt-2 mb-2 pt-2 pb-2" style="border: 1px solid #ccc; border-radius: 5px">
+      <div class="mb-2">Total parking spaces: {{ total_parking_spaces }} | Free spaces: {{ free_parking_spaces }} | The basic tariff for today: {{current_tariff}}</div>
+      <div class="progress ms-2 me-2">
+        <div
+          class="progress-bar"
+          role="progressbar"
+          style="width: {{ parking_progress }}%;"
+          aria-valuenow="{{ parking_progress }}"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          Filled: {{ parking_progress }}%
+        </div>
+      </div>
+      <a href="{% url 'parking_area:parking_area' %}" class="btn btn-primary mt-3">View the parking plan</a>
+    </div>
+  </div>
+  <img class="d-block mx-auto mb-4 mt-3" style="border-radius: 0.5rem" src="static/parking/cont1.jpg" alt="" width="100%" />
+  <p class="lead" style="font-size: 16px">A new generation of parking</p>
+  <p class="small"><em>{% if version %}Version: {{ version }}{% endif %}</em></p>
+</div>
+
+{% endblock %}
