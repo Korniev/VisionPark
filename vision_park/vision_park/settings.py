@@ -39,7 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'vision_park',
+    'accounts.apps.AccountsConfig',
+    'parking_area.apps.ParkingAreaConfig',
+    'recognize.apps.RecognizeConfig'
 ]
+
+AUTH_USER_MODEL = "accounts.CustomUser"
+PARKING_SPACES_COUNT = 36
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -128,7 +135,24 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'vision_park', 'static'),
 ]
 
+LOGIN_REDIRECT_URL = "/"
+LOGIN_URL = "/accounts/login"
+
+MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "/media/"
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.meta.ua'
+EMAIL_PORT = 465
+EMAIL_STARTTLS = False
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
