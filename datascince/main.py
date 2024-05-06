@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import imutils
 from tensorflow.keras.models import load_model
 
-model = load_model('best.pt')
+model = load_model('model.keras')
 
 img = cv2.imread(r'./img/foto/eu4.jpg')
 
