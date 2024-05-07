@@ -1,29 +1,101 @@
 {% extends "vision_park/base.html" %}
 {% block content %}
-
+{% load static %}
 <div class="px-1 my-2 text-center">
-  <h3 class="display-6 fw-bold">Fast Parking - Швидка паркова</h3>
-  <div class="col-lg-8 mx-auto">
-    <div class="mt-2 mb-2 pt-2 pb-2" style="border: 1px solid #ccc; border-radius: 5px">
-      <div class="mb-2">Total parking spaces: {{ total_parking_spaces }} | Free spaces: {{ free_parking_spaces }} | The basic tariff for today: {{current_tariff}}</div>
-      <div class="progress ms-2 me-2">
-        <div
-          class="progress-bar"
-          role="progressbar"
-          style="width: {{ parking_progress }}%;"
-          aria-valuenow="{{ parking_progress }}"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        >
-          Filled: {{ parking_progress }}%
+    <h3 class="display-6 fw-bold">Vision Parking</h3>
+    <div class="col-lg-8 mx-auto">
+        <div class="mt-2 mb-2 pt-2 pb-2" style="border: 1px solid #ccc; border-radius: 5px">
+            <div class="mb-2">Total parking spaces: {{ total_parking_spaces }} | Free spaces: {{ free_spaces }}
+            </div>
+            <div class="progress ms-2 me-2">
+                <div
+                        class="progress-bar"
+                        role="progressbar"
+                        style="width: {{ parking_progress }}%;"
+                        aria-valuenow="{{ parking_progress }}"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                >
+                    {{ parking_progress }}%
+                </div>
+            </div>
         </div>
-      </div>
-      <a href="{% url 'parking_area:parking_area' %}" class="btn btn-primary mt-3">View the parking plan</a>
     </div>
-  </div>
-  <img class="d-block mx-auto mb-4 mt-3" style="border-radius: 0.5rem" src="static/parking/cont1.jpg" alt="" width="100%" />
-  <p class="lead" style="font-size: 16px">A new generation of parking</p>
-  <p class="small"><em>{% if version %}Version: {{ version }}{% endif %}</em></p>
+
+    <div class="col-lg-12 mx-auto">
+        <div class="parking-lot">
+        </div>
+
+    </div>
 </div>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const parkingLot = document.querySelector(".parking-lot");
+        const numSpacesPerRow = 10;
+        const numRows = 2;
+        const totalSpaces = numSpacesPerRow * numRows;
+
+        // AJAX-запит для отримання даних про паркомісця
+        $.ajax({
+            url: "/parking_area/get_parking_spaces/",
+            type: "GET",
+            success: function (data) {
+                const parkingSpaces = data;
+                console.log(parkingSpaces);
+                for (let i = 0; i < totalSpaces; i++) {
+                    const spaceData = parkingSpaces[i];
+
+                    const space = document.createElement("div");
+                    space.className = "space";
+                    space.style.left = `${(i % numSpacesPerRow) * 10}%`;
+                    space.style.top = `${Math.floor(i / numSpacesPerRow) * 55}%`;
+
+                    const spaceNumber = document.createElement("span");
+                    spaceNumber.innerText = spaceData.number;
+                    spaceNumber.style.fontWeight = "bold";
+                    spaceNumber.style.color = "white";
+                    space.appendChild(spaceNumber);
+
+                    if (spaceData.is_occupied) {
+
+                        const carImg = document.createElement("img");
+                        carImg.src = "{% static 'vision_park/car.png' %}"
+                        carImg.className = "car";
+                        carImg.style.width = "100%";
+                        space.appendChild(carImg);
+                    }
+
+                    parkingLot.appendChild(space);
+                }
+            },
+            error: function (xhr, textStatus, error) {
+                console.error("Failed to fetch parking spaces:", error);
+            }
+        });
+    });
+</script>
+<!--document.addEventListener("DOMContentLoaded", function() {-->
+<!--    const parkingLot = document.querySelector(".parking-lot");-->
+<!--    const numSpacesPerRow = 10;-->
+<!--    const numRows = 2;-->
+<!--    const totalSpaces = numSpacesPerRow * numRows;-->
+
+<!--    for (let i = 0; i < totalSpaces; i++) {-->
+<!--      const carImg = document.createElement("img");-->
+<!--        carImg.src = "{% static 'vision_park/car.png' %}"-->
+<!--        carImg.className = "car";-->
+<!--        carImg.style.width = "100%";-->
+
+<!--        const space = document.createElement("div");-->
+<!--        space.className = "space";-->
+<!--        space.style.left = `${(i % numSpacesPerRow) * 10}%`;-->
+<!--        space.style.top = `${Math.floor(i / numSpacesPerRow) * 55}%`;-->
+<!--        parkingLot.appendChild(space);-->
+<!--        space.appendChild(carImg);-->
+<!--    }-->
+<!--});-->
+
+
+<!--</script>-->
 {% endblock %}

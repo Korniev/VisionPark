@@ -186,6 +186,24 @@ footer .icon {
     background-color: var(--bs-highlight-bg);
 }
 
+.parking-lot {
+    width: 100%;
+    height: 60vh;
+    border: 2px solid #333;
+    position: relative;
+}
+
+.space {
+    width: 10%;
+    height: 45%;
+    background-color: #787878;
+    border: 5px solid #ffffff;
+    position: absolute;
+    box-sizing: border-box;
+}
+
+
+
 @media (max-width: 768px) {
   #team-long {display: none}
   .team-short {display: block}
