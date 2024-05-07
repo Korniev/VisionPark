@@ -10,7 +10,7 @@ INPUT_WIDTH = 640
 INPUT_HEIGHT = 640
 
 # LOAD THE IMAGE
-img = io.imread('/Users/korniev/GItHub/VisionPark/datascince/img/foto/br1.png')
+img = io.imread('/Users/korniev/GItHub/VisionPark/datascince/img/foto/us1.png')
 
 # LOAD YOLO MODEL
 net = cv2.dnn.readNetFromONNX('/Users/korniev/GItHub/VisionPark/datascince/best.onnx')
