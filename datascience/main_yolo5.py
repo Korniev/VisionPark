@@ -9,9 +9,9 @@ import pytesseract
 INPUT_WIDTH = 640
 INPUT_HEIGHT = 640
 
-img = io.imread('/Users/korniev/GItHub/VisionPark/datascince/img/foto/ind2.jpeg')
+img = io.imread('/Users/korniev/GItHub/VisionPark/datascience/img/foto/ind2.jpeg')
 
-net = cv2.dnn.readNetFromONNX('/Users/korniev/GItHub/VisionPark/datascince/best.onnx')
+net = cv2.dnn.readNetFromONNX('/Users/korniev/GItHub/VisionPark/datascience/best.onnx')
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
 net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
 
