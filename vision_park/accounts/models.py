@@ -17,25 +17,3 @@ class CustomUser(AbstractUser):
  
     def __str__(self):
         return self.username
-
-
-
-class Car(models.Model):
-    license_plate = models.CharField(max_length=10, unique=True, null=True)
-    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='cars')
-    # photo_car = models.ForeignKey(Photo, on_delete=models.SET_NULL, null=True)
-    # predict = models.FloatField(null=True)
-    # PayPass = models.BooleanField(default=False)
-    is_blocked = models.BooleanField(default=False)  
-
-    def __str__(self):
-        return self.license_plate
-
-    # def save(self, *args, **kwargs):
-    #     if self.photo_car:
-    #         self.car_number = self.photo_car.recognized_car_number
-    #         self.predict = self.photo_car.accuracy
-    #     super().save(*args, **kwargs)
-
-    # def get_absolute_url(self):
-    #     return reverse("car_list", kwargs={"pk": self.pk})

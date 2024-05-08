@@ -1,12 +1,16 @@
-import json
-
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django.utils.timezone import localtime
+from django.utils import timezone, formats
 from django.urls import resolve, reverse
+from django.http import HttpResponseRedirect
+from django.core.files.storage import FileSystemStorage
+from django.contrib import messages
 
-from django.utils import timezone,formats
+from .forms import ImageUploadForm
+from .models import Car, ParkingSession
+from parking_area.models import ParkingSpace
+
 
 
 def main(request):
@@ -15,8 +19,80 @@ def main(request):
     # ваш код для обробки запиту тут
     return render(request, "recognize/main.html", {"active_menu": active_menu, "title": "Recognize"})
 
-def upload_file(request):
+
+
+def upload_out(request):
     resolved_view = resolve(request.path)
     active_menu = resolved_view.app_name
     context = {"active_menu": active_menu, "title": "CVM Recognize"}
-    return render(request, "recognize/upload.html", context)
+    return render(request, "recognize/upload_out.html", context)
+
+
+
+def upload_in(request):
+    if request.method == 'POST':
+        form = ImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+
+            # Зберігаємо зображення у файловій системі
+            image_file = request.FILES['image']
+            fs = FileSystemStorage(location='media/incoming/')
+            filename = fs.save(image_file.name, image_file)
+            uploaded_file_url = fs.url(filename)
+            
+            # # Зберігаємо шлях до зображення у базі даних
+            # image = IncomingImage(image=uploaded_file_url)
+            # image.save()
+            
+            # Розпізнаємо номери на зображенні
+            recognized_area = uploaded_file_url
+            recognized_symbols = uploaded_file_url
+            # recognized_text = recognize_numbers(uploaded_file_url)
+            recognized_text = "LA 80*90CA"
+            
+            # # Перенаправляємо користувача на сторінку з результатами
+            # return HttpResponseRedirect(reverse('upload_in_results', args=(recognized_area, recognized_symbols, recognized_text)))
+            # Повертаємо результати у шаблон
+            return render(request, 'recognize/result_in.html', {'recognized_area': recognized_area, 'recognized_symbols': recognized_symbols,
+                                                       'recognized_text': recognized_text})
+    else:
+        form = ImageUploadForm()
+    return render(request, 'recognize/upload_in.html', {'form': form})
+    
+
+
+def create_parking_session(request):
+    if request.method == 'POST':
+        # uploaded_file_url = request.POST.get('uploaded_file_url')
+        license_plate = request.POST.get('recognized_text')
+        # Знайти або створити новий автомобіль за номером
+        car, created = Car.objects.get_or_create(license_plate=license_plate)
+
+        # Перевіряємо, чи існує активний запис ParkingSession з таким номером
+        active_session_exists = ParkingSession.objects.filter(car=car, end_session=False).exists()
+        if active_session_exists:
+            messages.error(request, 'The Parking Session for this Car is already open.')
+            return render(request, 'recognize/result_in.html')
+        
+        # Отримати доступне паркомiсце
+        parking_space = ParkingSpace.get_available_space()
+
+        if parking_space:
+            # Створити новий запис про початок парковочної сесiї
+            parking_session = ParkingSession(car=car, parking_number=parking_space)
+            print(parking_session)
+            parking_session.save()
+            # Оновлюємо статус парковочного місця
+            parking_space.is_occupied = True
+            parking_space.save()
+        
+            # Після оновлення перенаправляємо користувача на ту ж сторінку
+            return redirect(to='recognize:main')
+        
+        else:
+            # Якщо паркомісця немає, показуємо повідомлення про це
+            messages.error(request, 'No available parking space.')
+            return render(request, 'recognize/result_in.html')
+
+    else:
+        return redirect('recognize:upload_in')
