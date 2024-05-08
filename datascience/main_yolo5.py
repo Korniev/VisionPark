@@ -11,17 +11,13 @@ import pytesseract
 INPUT_WIDTH = 640
 INPUT_HEIGHT = 640
 
-# Основний шлях до вашого Django проекту
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Шлях до папки datascience
 datascience_path = os.path.join(BASE_DIR, 'datascience')
 
-# Шлях до файлу моделі та зображення
 model_path = os.path.join(datascience_path, 'best.onnx')
 image_path = os.path.join(datascience_path, 'img/foto/ind2.jpeg')
 
-# Тепер використовуємо ці шляхи
 net = cv2.dnn.readNetFromONNX(model_path)
 img = io.imread(image_path)
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
@@ -104,7 +100,7 @@ def yolo_predictions(img, net):
     boxes_np, confidences_np, index = non_maximum_supression(input_image, detections)
     # step-3: Drawings and text extraction
     result_img = drawings(input_image, boxes_np, confidences_np, index)  # Make sure you use input_image here if needed
-    recognized_text = extract_text(result_img, boxes_np[index[0]]) if index.size > 0  else "No number recognized"
+    recognized_text = extract_text(result_img, boxes_np[index[0]]) if index.size > 0 else "No number recognized"
     return result_img, recognized_text
 
 
