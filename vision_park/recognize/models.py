@@ -5,7 +5,6 @@ from accounts.models import CustomUser
 from parking_area.models import ParkingSpace
 
 
-
 # class IncomingImage(models.Model):
 #     image = models.ImageField(upload_to='incoming/')
 
@@ -16,7 +15,7 @@ class Car(models.Model):
     # photo_car = models.ForeignKey(Photo, on_delete=models.SET_NULL, null=True)
     # predict = models.FloatField(null=True)
     # PayPass = models.BooleanField(default=False)
-    is_blocked = models.BooleanField(default=False)  
+    is_blocked = models.BooleanField(default=False)
 
     def __str__(self):
         return self.license_plate
@@ -29,7 +28,6 @@ class Car(models.Model):
 
     # def get_absolute_url(self):
     #     return reverse("car_list", kwargs={"pk": self.pk})
-
 
 
 class ParkingSession(models.Model):

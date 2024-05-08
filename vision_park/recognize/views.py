@@ -1,3 +1,6 @@
+import os
+
+import cv2
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -11,6 +14,10 @@ from .forms import ImageUploadForm
 from .models import Car, ParkingSession
 from parking_area.models import ParkingSpace
 
+import sys
+
+sys.path.append('/Users/korniev/GItHub/VisionPark')
+from datascience.main_yolo5 import yolo_predictions, net
 
 
 def main(request):
@@ -20,7 +27,6 @@ def main(request):
     return render(request, "recognize/main.html", {"active_menu": active_menu, "title": "Recognize"})
 
 
-
 def upload_out(request):
     resolved_view = resolve(request.path)
     active_menu = resolved_view.app_name
@@ -28,37 +34,31 @@ def upload_out(request):
     return render(request, "recognize/upload_out.html", context)
 
 
-
 def upload_in(request):
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
-
-            # Зберігаємо зображення у файловій системі
             image_file = request.FILES['image']
             fs = FileSystemStorage(location='media/incoming/')
             filename = fs.save(image_file.name, image_file)
             uploaded_file_url = fs.url(filename)
-            
-            # # Зберігаємо шлях до зображення у базі даних
-            # image = IncomingImage(image=uploaded_file_url)
-            # image.save()
-            
-            # Розпізнаємо номери на зображенні
-            recognized_area = uploaded_file_url
-            recognized_symbols = uploaded_file_url
-            # recognized_text = recognize_numbers(uploaded_file_url)
-            recognized_text = "LA 80*90CA"
-            
-            # # Перенаправляємо користувача на сторінку з результатами
-            # return HttpResponseRedirect(reverse('upload_in_results', args=(recognized_area, recognized_symbols, recognized_text)))
-            # Повертаємо результати у шаблон
-            return render(request, 'recognize/result_in.html', {'recognized_area': recognized_area, 'recognized_symbols': recognized_symbols,
-                                                       'recognized_text': recognized_text})
+
+            image_path = fs.path(filename)
+            img = cv2.imread(image_path)  # Завантажуємо зображення для розпізнавання
+            result_img, recognized_text = yolo_predictions(img, net)  # Переконайтеся, що повертаєте текст
+
+            # Збереження обробленого зображення
+            result_filename = 'processed_' + filename
+            cv2.imwrite(os.path.join(fs.location, result_filename), result_img)
+            result_img_url = fs.url(result_filename)
+
+            return render(request, 'recognize/result_in.html', {
+                'recognized_area': result_img_url,
+                'recognized_text': recognized_text
+            })
     else:
         form = ImageUploadForm()
     return render(request, 'recognize/upload_in.html', {'form': form})
-    
 
 
 def create_parking_session(request):
@@ -73,7 +73,7 @@ def create_parking_session(request):
         if active_session_exists:
             messages.error(request, 'The Parking Session for this Car is already open.')
             return render(request, 'recognize/result_in.html')
-        
+
         # Отримати доступне паркомiсце
         parking_space = ParkingSpace.get_available_space()
 
@@ -85,10 +85,10 @@ def create_parking_session(request):
             # Оновлюємо статус парковочного місця
             parking_space.is_occupied = True
             parking_space.save()
-        
+
             # Після оновлення перенаправляємо користувача на ту ж сторінку
             return redirect(to='recognize:main')
-        
+
         else:
             # Якщо паркомісця немає, показуємо повідомлення про це
             messages.error(request, 'No available parking space.')
