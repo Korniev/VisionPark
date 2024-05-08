@@ -41,13 +41,12 @@ def upload_in(request):
             image_file = request.FILES['image']
             fs = FileSystemStorage(location='media/incoming/')
             filename = fs.save(image_file.name, image_file)
-            uploaded_file_url = fs.url(filename)
+            # uploaded_file_url = fs.url(filename)
 
             image_path = fs.path(filename)
-            img = cv2.imread(image_path)  # Завантажуємо зображення для розпізнавання
-            result_img, recognized_text = yolo_predictions(img, net)  # Переконайтеся, що повертаєте текст
+            img = cv2.imread(image_path)
+            result_img, recognized_text = yolo_predictions(img, net)
 
-            # Збереження обробленого зображення
             result_filename = 'processed_' + filename
             cv2.imwrite(os.path.join(fs.location, result_filename), result_img)
             result_img_url = fs.url(result_filename)
