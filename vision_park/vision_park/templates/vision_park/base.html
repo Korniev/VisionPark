@@ -20,8 +20,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     {% load static %}
-    <link rel="stylesheet" href="{% static 'vision_park/styles.css' %}"/>
     <link rel="stylesheet" href="{% static 'vision_park/docs.css' %}"/>
+    <link rel="stylesheet" href="{% static 'vision_park/messages.css' %}"/>
+    <link rel="stylesheet" href="{% static 'vision_park/styles.css' %}"/>
     <link rel="stylesheet" href="{% static 'vision_park/css/all.min.css' %}"/>
     <link rel="icon" href="{% static 'vision_park/favicon.png' %}"/>
 
@@ -41,37 +42,33 @@
         <ul class="nav nav-pills flex-column">
             <li>
                 <a class="nav-link {% if active_menu == 'parking_area' %}active{% else %}text-white{% endif %}"
-                   href="{% url 'parking_area:parking_area' %}">
-                    <box-icon type='solid' name='parking'></box-icon>
+                    href="{% url 'parking_area:parking_area' %}">
+                    <img src="{% static 'vision_park/1-menu-parking1.png' %}" alt="Parking Icon"
+                         style="width: 24px; height: 24px; float: left; margin-right: 8px;">
                     <span class="nav-item mx-auto">Parking</span>
                 </a>
             </li>
             {% if user.is_authenticated %}
             <li>
-                <a
-                        class="nav-link {% if active_menu == 'accounts' %}active{% else %}text-white{% endif %}"
-                        href="{% url 'accounts:profile' %}"
-                >
-                    <i class="fa-solid fa-user"></i>
+                <a class="nav-link {% if active_menu == 'accounts' %}active{% else %}text-white{% endif %}"
+                    href="{% url 'accounts:profile' %}">
+                    <img src="{% static 'vision_park/6-menu-profile.png' %}" alt="Profile Icon"
+                         style="width: 24px; height: 24px; float: left; margin-right: 8px;">
                     <span class="nav-item">Profile</span>
                 </a>
             </li>
             <li>
-                <a
-                        class="nav-link {% if active_menu == 'finance' %}active{% else %}text-white{% endif %}"
-                        href="#"
-                >
-                    <img src="{% static 'vision_park/3-menu-register.png' %}" alt="Register Icon"
+                <a class="nav-link {% if active_menu == 'finance' %}active{% else %}text-white{% endif %}"
+                    href="#">
+                    <img src="{% static 'vision_park/3-menu-register.png' %}" alt="Finance Icon"
                          style="width: 24px; height: 24px; float: left; margin-right: 8px;">
                     <span class="nav-item">Finance</span>
                 </a>
             </li>
             {% if user.is_superuser %}
             <li>
-                <a
-                        class="nav-link {% if active_menu == 'car_recognize' %}active{% else %}text-white{% endif %}"
-                        href="{% url 'recognize:main' %}"
-                >
+                <a class="nav-link {% if active_menu == 'car_recognize' %}active{% else %}text-white{% endif %}"
+                    href="{% url 'recognize:main' %}">
                     <img src="{% static 'vision_park/4-menu-recognize.png' %}" alt="Recognition Icon"
                          style="width: 24px; height: 24px; float: left; margin-right: 8px;">
                     <span class="nav-item">Car Recognize</span>
@@ -103,33 +100,26 @@
                 <span class="nav-item">Messages</span>
               </a>
             </li>  -->
-
             <li>
-                <a
-                        class="nav-link {% if active_menu == 'logout' %}active{% else %}text-white{% endif %}"
-                        href="{% url 'accounts:logout' %}"
-                >
-                    <i class="fa-solid fa-sign-out"></i>
+                <a class="nav-link {% if active_menu == 'logout' %}active{% else %}text-white{% endif %}"
+                    href="{% url 'accounts:logout' %}">
+                    <img src="{% static 'vision_park/5-menu-logout.png' %}" alt="Logout Icon"
+                         style="width: 24px; height: 24px; float: left; margin-right: 8px;">
                     <span class="nav-item">Logout</span>
                 </a>
             </li>
             {% else %}
             <li>
-                <a
-                        class="nav-link {% if active_menu == 'signin' %}active{% else %}text-white{% endif %}"
-                        href="{% url 'accounts:login' %}"
-                >
+                <a class="nav-link {% if active_menu == 'signin' %}active{% else %}text-white{% endif %}"
+                    href="{% url 'accounts:login' %}">
                     <img src="{% static 'vision_park/2-menu-login.png' %}" alt="Register Icon"
                          style="width: 24px; height: 24px; float: left; margin-right: 8px;">
                     <span class="nav-item">Login</span>
                 </a>
             </li>
-
             <li>
-                <a
-                        class="nav-link {% if active_menu == 'signup' %}active{% else %}text-white{% endif %}"
-                        href="{% url 'accounts:register' %}"
-                >
+                <a class="nav-link {% if active_menu == 'signup' %}active{% else %}text-white{% endif %}"
+                        href="{% url 'accounts:register' %}">
                     <img src="{% static 'vision_park/3-menu-register.png' %}" alt="Register Icon"
                          style="width: 24px; height: 24px; float: left; margin-right: 8px;">
                     <span class="nav-item">To Register</span>

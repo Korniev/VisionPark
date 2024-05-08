@@ -1,5 +1,5 @@
 <!-- photos/templates/upload.html -->
-{% extends "parking/base.html" %} {% block content %} {% if target_type %}
+{% extends "vision_park/base.html" %} {% block content %} {% if target_type %}
 <h1>Upload photo: {{ target_type.desc}}</h1>
 {% else %}
 <h1>Upload photo</h1>
@@ -35,11 +35,11 @@
         <input class="btn btn-primary" type="submit" value="Submit" />
       </li>
       <li class="list-group-item">
-        <a href="{% url 'photos:main' %}" class="btn btn-primary">Back</a>
+        <a href="{% url 'recognize:main' %}" class="btn btn-primary">Back</a>
       </li>
       {% if target_type.desc == "OUT" %}
       <li class="list-group-item">
-        <a href="{% url 'finance:add_pay' %}" class="btn btn-primary">Pay</a>
+        <a href="#" class="btn btn-primary">Pay</a>
       </li>
       {% endif %}
     </ul>

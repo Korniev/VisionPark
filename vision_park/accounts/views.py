@@ -8,6 +8,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 from .forms import RegisterForm, LoginForm
+from .models import CustomUser
+from recognize.models import Car
 
 
 class RegisterView(View):
@@ -76,11 +78,29 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
         print(f"Error sending email: {err}")
 
 
+
 @login_required
-def profile(request):
-    resolved_view = resolve(request.path)
-    active_menu = resolved_view.app_name
-    return render(request, 'accounts/profile.html', {"active_menu": active_menu, "title": "User profile"})
+def profile_add_car(request):
+    if request.method == 'POST':
+        car_license_plate = request.POST.get('car_license_plate')
+        car = Car.objects.get(license_plate=car_license_plate)
+        car.owner_id = request.user.id
+        car.save()
+        return redirect(to='accounts:profile')
+    else:
+        user_cars = Car.objects.filter(owner=request.user)
+        available_cars = Car.objects.filter(owner__isnull=True)
+        context = {'user_profile': request.user, 'user_cars': user_cars,
+                   'available_cars': available_cars}
+        return render(request, 'accounts/profile_add_cars.html', context)
+
+
+
+# @login_required
+# def profile(request):
+#     resolved_view = resolve(request.path)
+#     active_menu = resolved_view.app_name
+#     return render(request, 'accounts/profile.html', {"active_menu": active_menu, "title": "User profile"})
 
 
 

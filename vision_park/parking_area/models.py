@@ -7,3 +7,7 @@ class ParkingSpace(models.Model):
 
     def __str__(self):
         return self.number
+    
+    @classmethod
+    def get_available_space(cls):
+        return cls.objects.filter(is_occupied=False).first()

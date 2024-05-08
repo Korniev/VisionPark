@@ -1,0 +1,25 @@
+{% extends "vision_park/base.html" %}
+{% block content %}
+
+{% if user.is_superuser %}
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <p>{{ form.photo.label_tag }} {{ form.photo }}</p>
+  <div class="container">
+    <ul class="list-group list-group-horizontal">
+      <li class="list-group-item">
+        <input class="btn btn-primary" type="submit" value="Submit"/>
+      </li>
+      <li class="list-group-item">
+        <a href="{% url 'recognize:main' %}" class="btn btn-primary">Back</a>
+      </li>
+    </ul>
+  </div>
+</form>
+
+{% else %}
+<div class="p-2 bg-danger text-white">Recognize denied</div>
+{% endif %}
+
+{% endblock content %}
