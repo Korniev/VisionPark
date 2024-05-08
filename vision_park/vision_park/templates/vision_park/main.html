@@ -6,7 +6,7 @@ Ase of Base
 
 {% block content %}
 {% load static %}
-<div class="container mt-3">
+<div class="container mt-3 text-center">
     <h2>ASE OF BASE</h2>
 
     {% for message in messages %}
@@ -14,13 +14,13 @@ Ase of Base
     {% endfor %}
 
     {% if user.is_authenticated %}
-    <div class="quote" style="margin-top: 30px;" itemscope="" itemtype="http://schema.org/CreativeWork">
+    <div class="quote" style="margin-top: 30px; text-align: center;" itemscope="" itemtype="http://schema.org/CreativeWork" >
         <h3>Welcome {{ request.user }} in Vision Park!</h3>
     </div>
     {% else %}
-    <div class="quote" style="margin-top: 30px;" itemscope="" itemtype="http://schema.org/CreativeWork">
+    <div class="quote" style="margin-top: 30px; text-align: center;" itemscope="" itemtype="http://schema.org/CreativeWork">
         <h3>Welcome!</h3>
-        <h4>To start using <b>Neural Parking</b>, You must log in to your account!</h4>
+        <h4>To start using <b>Vision Parking</b>, You must log in to your account!</h4>
     </div>
     {% endif %}
 

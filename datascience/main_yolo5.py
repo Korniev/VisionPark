@@ -104,7 +104,7 @@ def yolo_predictions(img, net):
     boxes_np, confidences_np, index = non_maximum_supression(input_image, detections)
     # step-3: Drawings and text extraction
     result_img = drawings(input_image, boxes_np, confidences_np, index)  # Make sure you use input_image here if needed
-    recognized_text = extract_text(result_img, boxes_np[index[0]]) if index.size > 0 else "No number recognized"
+    recognized_text = extract_text(result_img, boxes_np[index[0]]) if index.size > 0  else "No number recognized"
     return result_img, recognized_text
 
 
