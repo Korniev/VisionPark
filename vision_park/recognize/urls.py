@@ -7,5 +7,7 @@ urlpatterns = [
     # path("", views.main, name="main"),
     # path("", views.main, name="index"),
     path("main", views.main, name="main"),
-    path("upload", views.upload_file, name="upload"),
+    path("upload_in", views.upload_in, name="upload_in"),
+    path("result_in", views.create_parking_session, name="result_in"),
+    path("upload_out", views.upload_out, name="upload_out"),
 ]
