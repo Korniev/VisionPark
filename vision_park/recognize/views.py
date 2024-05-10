@@ -2,11 +2,8 @@ import os
 
 import cv2
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django.utils import timezone, formats
-from django.urls import resolve, reverse
-from django.http import HttpResponseRedirect
+from django.urls import resolve
 from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
 from django.db.models import Q
@@ -17,10 +14,7 @@ from .models import Car, ParkingSession
 from finance.models import Pricing
 from parking_area.models import ParkingSpace
 
-import sys
-
-sys.path.append('/Users/korniev/GItHub/VisionPark')
-from datascience.main_yolo5 import yolo_predictions, net
+from utils.datascience.main_yolo5 import yolo_predictions, net
 
 
 @login_required
