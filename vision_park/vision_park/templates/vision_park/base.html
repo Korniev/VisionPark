@@ -49,62 +49,46 @@
                 </a>
             </li>
             {% if user.is_authenticated %}
-            <li>
-                <a class="nav-link {% if active_menu == 'accounts' %}active{% else %}text-white{% endif %}"
-                    href="{% url 'accounts:profile' %}">
-                    <img src="{% static 'vision_park/6-menu-profile.png' %}" alt="Profile Icon"
-                         style="width: 24px; height: 24px; float: left; margin-right: 8px;">
-                    <span class="nav-item">Profile</span>
-                </a>
-            </li>
-            <li>
-                <a class="nav-link {% if active_menu == 'finance' %}active{% else %}text-white{% endif %}"
-                    href="#">
-                    <img src="{% static 'vision_park/3-menu-register.png' %}" alt="Finance Icon"
-                         style="width: 24px; height: 24px; float: left; margin-right: 8px;">
-                    <span class="nav-item">Finance</span>
-                </a>
-            </li>
-            {% if user.is_superuser %}
-            <li>
-                <a class="nav-link {% if active_menu == 'car_recognize' %}active{% else %}text-white{% endif %}"
-                    href="{% url 'recognize:main' %}">
-                    <img src="{% static 'vision_park/4-menu-recognize.png' %}" alt="Recognition Icon"
-                         style="width: 24px; height: 24px; float: left; margin-right: 8px;">
-                    <span class="nav-item">Car Recognize</span>
-                </a>
-            </li>
-            <!--  <li>
-              <a class="nav-link {% if active_menu == 'cars' %}active{% else %}text-white{% endif %}" href="/cars/">
-                <i class="fa-solid fa-car"></i>
-                <span class="nav-item">Cars</span>
-              </a>
-            </li>  -->
-            {% endif %}
-            <!-- <li>
-              <a
-                class="nav-link {% if active_menu == 'finance' %}active{% else %}text-white{% endif %}"
-                href="#"
-              >
-                <i class="fa-solid fa-table-list"></i>
-                <span class="nav-item">Finance</span>
-              </a>
-            </li>
-
-            <li>
-              <a
-                class="nav-link {% if active_menu == 'messages' %}active{% else %}text-white{% endif %}"
-                href="#"
-              >
-                <i class="fa-solid fa-earth-americas"></i>
-                <span class="nav-item">Messages</span>
-              </a>
-            </li>  -->
+                {% if user.is_superuser %}
+                    <li>
+                        <a class="nav-link {% if active_menu == 'car_recognize' %}active{% else %}text-white{% endif %}"
+                            href="{% url 'recognize:main' %}">
+                            <img src="{% static 'vision_park/4-menu-recognize.png' %}" alt="Recognition Icon"
+                                style="width: 24px; height: 24px; float: left; margin-right: 8px;">
+                            <span class="nav-item">Car Recognize</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link {% if active_menu == 'finance' %}active{% else %}text-white{% endif %}"
+                            href="{% url 'finance:tariffs' %}">
+                            <img src="{% static 'vision_park/3-menu-register.png' %}" alt="Finance Icon"
+                                style="width: 24px; height: 24px; float: left; margin-right: 8px;">
+                            <span class="nav-item">Tariffs</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a class="nav-link {% if active_menu == 'accounts' %}active{% else %}text-white{% endif %}"
+                            href="{% url 'accounts:profile' %}">
+                            <img src="{% static 'vision_park/6-menu-profile.png' %}" alt="Profile Icon"
+                                style="width: 24px; height: 24px; float: left; margin-right: 8px;">
+                            <span class="nav-item">Profile</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link {% if active_menu == 'finance' %}active{% else %}text-white{% endif %}"
+                            href="{% url 'finance:payments_user' %}">
+                            <img src="{% static 'vision_park/3-menu-register.png' %}" alt="Finance Icon"
+                                style="width: 24px; height: 24px; float: left; margin-right: 8px;">
+                            <span class="nav-item">Finance</span>
+                        </a>
+                    </li>
+                {% endif %}
             <li>
                 <a class="nav-link {% if active_menu == 'logout' %}active{% else %}text-white{% endif %}"
                     href="{% url 'accounts:logout' %}">
                     <img src="{% static 'vision_park/5-menu-logout.png' %}" alt="Logout Icon"
-                         style="width: 24px; height: 24px; float: left; margin-right: 8px;">
+                        style="width: 24px; height: 24px; float: left; margin-right: 8px;">
                     <span class="nav-item">Logout</span>
                 </a>
             </li>
@@ -127,7 +111,7 @@
             </li>
             {% endif %}
         </ul>
-        <hr/>
+        </hr>
         <div class="dropdown">
             <a
                     href="#"
@@ -146,12 +130,12 @@
         </div>
     </div>
 
-
     <div class="b-example-divider b-example-vr">
     </div>
 
     <div class="container-fluid">
-        {% block content %} {% endblock %}
+        {% block content %}
+        {% endblock %}
     </div>
 </main>
 

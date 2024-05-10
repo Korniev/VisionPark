@@ -1,0 +1,35 @@
+{% extends "vision_park/base.html" %}
+{% block content %}
+
+{% if user.is_superuser %}
+{% csrf_token %}
+<h2>History of tariff</h2>
+
+{% for tariff in tariffs %}
+    <p>Tariff name: {{ tariff.name }}</p>
+    <p>Free period (in minutes): {{ tariff.free_period }}</p>
+    <p>Cost per hour: {{ tariff.cost_per_hour }}</p>
+    <p>Start of action: {{ tariff.start_time }}</p>
+    <p>Expiration date: {{ tariff.end_time }}</p>
+    
+    {% if not tariff.end_time %}
+        <a class="btn btn-danger" href="{% url 'finance:tariff_complete' tariff.id %}">Complete</a>
+    {% endif %}
+{% empty %}
+    <p>NO tariff has been implemented.</p>
+{% endfor %}
+
+{% for message in messages %}
+<h3 class="justify-content-center" style="margin-left: 0px; margin-bottom: 30px"> {{ message }}</h3>
+{% endfor %}
+
+<h2>Add tariff</h2>
+<div>
+<a class="btn btn-warning" href="{% url 'finance:tariff_add' %}">New tariff</a>
+</div>
+
+{% else %}
+<div class="p-2 bg-danger text-white">Viewing is not possible</div>
+{% endif %}
+
+{% endblock content %}
