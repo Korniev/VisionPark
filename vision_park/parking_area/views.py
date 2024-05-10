@@ -16,7 +16,7 @@ def index(request):
     data = {
         'total_parking_spaces': total_parking_spaces,
         'free_spaces': free_spaces,
-        'parking_progress': (occupied_spaces / total_parking_spaces) * 100
+        'parking_progress': int((occupied_spaces / total_parking_spaces) * 100)
     }
     return render(request, 'parking_area/parking_area.html', context=data)
 

@@ -1,3 +1,6 @@
+import os
+
+import cv2
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -7,18 +10,23 @@ from django.http import HttpResponseRedirect
 from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
 from django.db.models import Q
+from django.conf import settings
 
 from .forms import ImageUploadForm
 from .models import Car, ParkingSession
 from finance.models import Pricing
 from parking_area.models import ParkingSpace
 
+import sys
+
+sys.path.append('/Users/korniev/GItHub/VisionPark')
+from datascience.main_yolo5 import yolo_predictions, net
+
 
 @login_required
 def main(request):
     resolved_view = resolve(request.path)
     active_menu = resolved_view.app_name
-    # ваш код для обробки запиту тут
     return render(request, "recognize/main.html", {"active_menu": active_menu, "title": "Recognize"})
 
 
@@ -35,32 +43,34 @@ def upload_in(request):
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
-
-            # Зберігаємо зображення у файловій системі
             image_file = request.FILES['image']
-            fs = FileSystemStorage(location='media/incoming/')
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'incoming'))
+            # fs = FileSystemStorage(location='media/incoming/')
             filename = fs.save(image_file.name, image_file)
-            uploaded_file_url = fs.url(filename)
-            
-            # # Зберігаємо шлях до зображення у базі даних
-            # image = IncomingImage(image=uploaded_file_url)
-            # image.save()
-            
-            # Розпізнаємо номери на зображенні
-            recognized_area = uploaded_file_url
-            recognized_symbols = uploaded_file_url
-            # recognized_text = recognize_numbers(uploaded_file_url)
-            recognized_text = "LA 80*90CA"
-            
-            # # Перенаправляємо користувача на сторінку з результатами
-            # return HttpResponseRedirect(reverse('upload_in_results', args=(recognized_area, recognized_symbols, recognized_text)))
-            # Повертаємо результати у шаблон
-            return render(request, 'recognize/result_in.html', {'recognized_area': recognized_area, 'recognized_symbols': recognized_symbols,
-                                                       'recognized_text': recognized_text})
+
+            image_path = fs.path(filename)
+            img = cv2.imread(image_path)
+            result_img, recognized_text = yolo_predictions(img, net)
+
+            result_filename = 'processed_' + filename
+            cv2.imwrite(os.path.join(fs.location, result_filename), result_img)
+            result_img_url = fs.url('incoming/' + result_filename)
+
+            thumbnail_size = (300, 200)
+            thumbnail = cv2.resize(img, thumbnail_size, interpolation=cv2.INTER_AREA)
+            thumbnail_filename = 'thumbnail_' + filename
+            cv2.imwrite(os.path.join(fs.location, thumbnail_filename), thumbnail)
+            thumbnail_image = fs.url('incoming/' + thumbnail_filename)
+
+            return render(request, 'recognize/result_in.html', {
+                'recognized_area': result_img_url,
+                'recognized_image': thumbnail_image,
+                'recognized_text': recognized_text
+            })
     else:
         form = ImageUploadForm()
     return render(request, 'recognize/upload_in.html', {'form': form})
-    
+
 
 @login_required
 def create_parking_session(request):
@@ -72,13 +82,13 @@ def create_parking_session(request):
         if car.is_blocked:
             messages.error(request, 'This Сar is not allowed to enter the parking\n"Ase of Base".')
             return render(request, 'recognize/result_in.html')
-        
+
         # Перевіряємо, чи існує активний запис ParkingSession з таким номером
         active_session_exists = ParkingSession.objects.filter(car=car, end_session=False).exists()
         if active_session_exists:
             messages.error(request, 'The Parking Session for this Car is already open.')
             return render(request, 'recognize/result_in.html')
-        
+
         # Отримати доступне паркомiсце
         parking_space = ParkingSpace.get_available_space()
 
@@ -91,10 +101,10 @@ def create_parking_session(request):
             # Оновлюємо статус парковочного місця
             parking_space.is_occupied = True
             parking_space.save()
-        
+
             # Після оновлення перенаправляємо користувача на ту ж сторінку
             return redirect(to='recognize:main')
-        
+
         else:
             # Якщо паркомісця немає, показуємо повідомлення про це
             messages.error(request, 'No available parking space.')
@@ -102,7 +112,7 @@ def create_parking_session(request):
 
     else:
         return redirect('recognize:upload_in')
-    
+
 
 @login_required
 def tariff_insert(request):

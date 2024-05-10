@@ -10,12 +10,12 @@
     <table class="table">
       <tbody>
         <tr>
-          <th>Recognized Area_symbols:</th>
+          <th>Recognized Area:</th>
           <td>{{ recognized_area }}</td>
         </tr>
-        <tr>
-          <th>Recognized Symbols:</th>
-          <td>{{ recognized_symbols }}</td>
+         <tr>
+          <th>Recognized Image:</th>
+          <td><img src="{{ recognized_image }}"> </td>
         </tr>
         <tr>
           <th>Recognized Number:</th>
@@ -23,7 +23,7 @@
         </tr>
         <tr>
           <th><button type="submit">Update License Plate</button></th>
-          <td><input type="text" name="recognized_text" value="{{ recognized_text }}"></td>
+          <td><input type="text" name="recognized_text" value="{{ recognized_text }}" maxlength="20"></td>
         </tr>
       </tbody>
     </table>

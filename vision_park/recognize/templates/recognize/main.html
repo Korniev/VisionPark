@@ -2,7 +2,7 @@
 {% block content %}
 {% load static %}
 <div class="container">
-  <div class="row" style="margin-top: 50px;">
+  <div class="row justify-content-center" style="margin-top: 50px;">
     <!-- <div class="col-md-4">
             <div class="card bg-primary">
                 <div class="card-body">
@@ -10,29 +10,29 @@
                 </div>
             </div>
         </div> -->
-    <div class="col-md-4">
+    <div class="col-md-6 d-flex align-items-center">
       <!-- <div class="card bg-primary"> -->
-        <div class="card-body mx-auto text-center">
+        <div class="card-body mx-auto text-center ">
           <a href="{% url 'recognize:upload_in' %}" class="btn btn-lg btn-block">
             <img style="width: 100%;"
               src="{% static 'recognize/logo-compressed2.jpg' %}"
-              title="Upload IN photo of car"
-              alt="Upload IN photo of car"
+              title="Upload photo of car for enter"
+              alt="Upload photo of car for enter"
           /></a>
-          <p>Upload IN photo of car</p>
+          <p>Upload photo of car for enter</p>
         </div>
       <!-- </div> -->
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6 d-flex align-items-center">
       <!-- <div class="card bg-success"> -->
         <div class="card-body mx-auto text-center">
           <a href="{% url 'recognize:upload_out' %}" class="btn btn-lg btn-block"
             ><img style="width: 100%;"
               src="{% static 'recognize/logo-compressed3.jpg' %}"
-              title="Upload OUT photo of car"
-              alt="Upload OUT photo of car"
+              title="Upload photo of car for exit"
+              alt="Upload photo of car for exit"
           /></a>
-          <p>Upload OUT photo of car</p>
+          <p>Upload photo of car for exit</p>
         </div>
       <!-- </div> -->
     </div>

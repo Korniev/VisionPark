@@ -1,3 +1,5 @@
+import os
+
 import cv2
 import numpy as np
 import pandas as pd
@@ -9,9 +11,15 @@ import pytesseract
 INPUT_WIDTH = 640
 INPUT_HEIGHT = 640
 
-img = io.imread('/Users/korniev/GItHub/VisionPark/datascience/img/foto/ind2.jpeg')
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-net = cv2.dnn.readNetFromONNX('/Users/korniev/GItHub/VisionPark/datascience/best.onnx')
+datascience_path = os.path.join(BASE_DIR, 'datascience')
+
+model_path = os.path.join(datascience_path, 'best.onnx')
+image_path = os.path.join(datascience_path, 'img/foto/ind2.jpeg')
+
+net = cv2.dnn.readNetFromONNX(model_path)
+img = io.imread(image_path)
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
 net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
 
@@ -90,9 +98,10 @@ def yolo_predictions(img, net):
     input_image, detections = get_detections(img, net)
     # step-2: NMS
     boxes_np, confidences_np, index = non_maximum_supression(input_image, detections)
-    # step-3: Drawings
-    result_img = drawings(img, boxes_np, confidences_np, index)
-    return result_img
+    # step-3: Drawings and text extraction
+    result_img = drawings(input_image, boxes_np, confidences_np, index)  # Make sure you use input_image here if needed
+    recognized_text = extract_text(result_img, boxes_np[index[0]]) if index.size > 0 else "No number recognized"
+    return result_img, recognized_text
 
 
 # extrating text
@@ -106,14 +115,14 @@ def extract_text(image, bbox):
     else:
         text = pytesseract.image_to_string(roi)
         text = text.strip()
-        print(text)
         return text
 
 
 # test
 results = yolo_predictions(img, net)
-
+"""
 fig = px.imshow(results)
 fig.update_layout(width=800, height=700, margin=dict(l=10, r=10, b=10, t=10))
 fig.update_xaxes(showticklabels=False).update_yaxes(showticklabels=False)
 fig.show()
+"""
