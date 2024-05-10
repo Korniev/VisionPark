@@ -1,0 +1,27 @@
+{% extends "vision_park/base.html" %}
+{% block content %}
+
+{% if user.is_authenticated %}
+<h2>Tariff Complete preview</h2>
+
+<p>Tariff name: {{ tariff.name }}</p>
+<p>Free period (in minutes): {{ tariff.free_period }}</p>
+<p>Cost per hour {{ tariff.cost_per_hour }}</p>
+<p>Start of action: {{ tariff.start_time }}</p>
+
+<form method="post" action="{% url 'finance:tariff_complete' tariff.id %}">
+    {% csrf_token %}
+    <input class="btn btn-danger" type="hidden" name="end_time" value="{{ tariff.end_time }}">
+    <button class="btn btn-danger" type="submit" name="confirm">Confirm</button>
+    <a href="{% url 'finance:tariffs' %}" class="btn btn-primary">Back</a>
+</form>
+
+{% for message in messages %}
+<h3 class="justify-content-center" style="margin-left: 0px; margin-bottom: 30px"> {{ message }}</h3>
+{% endfor %}
+
+{% else %}
+<div class="p-2 bg-danger text-white">Viewing is not possible</div>
+{% endif %}
+
+{% endblock content %}
