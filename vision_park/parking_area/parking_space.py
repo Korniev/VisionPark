@@ -12,7 +12,6 @@ def create_parking_spaces(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [

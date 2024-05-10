@@ -1,0 +1,6 @@
+train: /content/drive/My Drive/Colab Notebooks/number-plate-detection/data_images/train
+val: /content/drive/My Drive/Colab Notebooks/number-plate-detection/data_images/test
+nc: 1
+names: [
+    'license_plate'
+]
