@@ -1,0 +1,26 @@
+{% extends "vision_park/base.html" %}
+{% block content %}
+
+{% if user.is_authenticated %}
+<h2>Payment confirmation</h2>
+<br>
+<h3>Ваша сессия паркування № {{ session.id }} успiшно сплачена</h3>
+<br>
+<p>Номерной знак: {{ session.car }}</p>
+<p>Тариф: {{ session.tarif.name }}</p>
+<p>Стоимость: {{ session.total_cost|floatformat:2 }}</p>
+<br>
+<h3>Щасливого путi.</h3>
+<br>
+<div>
+    <a href="{% url 'finance:payments_user' %}" class="btn btn-primary">Back</a>
+</div>
+{% for message in messages %}
+<h3 class="justify-content-center" style="margin-left: 0px; margin-bottom: 30px"> {{ message }}</h3>
+{% endfor %}
+
+{% else %}
+<div class="p-2 bg-danger text-white">Viewing is not possible</div>
+{% endif %}
+
+{% endblock content %}

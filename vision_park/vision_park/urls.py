@@ -9,14 +9,14 @@ from . import settings
 
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path('admin/', admin.site.urls),
     path('', views.main, name='main'),
     path('auth/', include('accounts.urls')),
     path('parking_area/', include('parking_area.urls')),
     path('recognize/', include('recognize.urls')),
+    path('finance/', include('finance.urls')),
     # path("cars/", include("cars.urls")),
-    # path("photos/", include("photos.urls")),
-    # path("finance/", include("finance.urls")),
+    # path("photos/", include("photos.urls")),    
     # path("communications/", include("communications.urls")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
   + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
