@@ -1,0 +1,5 @@
+User;Email;Phone;License Plate;Status;Start parking;Number parkingplace;Tariff;Free Period;Payment;End parking;Close session
+user1;user1@bigmir.net;+380634140202;LA 80-90CA;False;2024-05-09 07:01:24.928000+00:00;A01;Begining;20;39.98;2024-05-09 15:21:14.275791+00:00;True
+user1;user1@bigmir.net;+380634140202;LA 88-90CA;False;2024-05-09 12:38:53.885759+00:00;A02;Begining;20;12.01;2024-05-09 15:23:03.930052+00:00;True
+;;;LA 82-90CA;True;2024-05-09 21:35:35.121651+00:00;B04;Thith;30;0.00;;False
+;;;LA 01-90CA;False;2024-05-09 23:46:45.052918+00:00;A05;Thith;30;0.00;;False
