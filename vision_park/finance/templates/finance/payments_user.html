@@ -1,23 +1,48 @@
 {% extends "vision_park/base.html" %}
-{% block content %}
 
+{% block title %}
+Session History
+{% endblock %}
+
+{% block content %}
 {% if user.is_superuser or user.is_authenticated %}
 {% csrf_token %}
-<h2>История сессий</h2>
+<h2 class="title is-2">Session History</h2>
 
-{% for session in sessions %}
-    <p>Сессия №{{ session.id }}</p>
-    <p>Номерной знак: {{ session.car }}</p>
-    <p>Дата начала: {{ session.start_time }}</p>
-    <p>Дата окончания: {{ session.end_time }}</p>
-    <p>Тариф: {{ session.tarif.name }}</p>
-    <p>Стоимость: {{ session.total_cost }}</p>
-    {% if not session.end_time %}
-        <a href="{% url 'finance:payment_preview' session.id %}">Pay</a>
-    {% endif %}
-{% empty %}
-    <p>История сессий пуста.</p>
-{% endfor %}
+<div class="table-container" style=" margin-top: 30px;">
+    <table class="table is-fullwidth">
+        <thead>
+        <tr>
+            <th>Session №</th>
+            <th>License Plate</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Tariff</th>
+            <th>Cost</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for session in sessions %}
+        <tr>
+            <td>{{ session.id }}</td>
+            <td>{{ session.car }}</td>
+            <td>{{ session.start_time }}</td>
+            {% if not session.end_time %}
+            <td><a class="button is-danger" href="{% url 'finance:payment_preview' session.id %}">Pay</a></td>
+            {% else %}
+            <td>{{ session.end_time }}</td>
+            {% endif %}
+            <td>{{ session.tarif.name }}</td>
+            <td>{{ session.total_cost }}</td>
+        </tr>
+        {% empty %}
+        <p>Session history is empty.</p>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
 
 {% else %}
 <div class="p-2 bg-danger text-white">Viewing is not possible</div>

@@ -18,5 +18,5 @@ urlpatterns = [
     # path("cars/", include("cars.urls")),
     # path("photos/", include("photos.urls")),    
     # path("communications/", include("communications.urls")),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
+] + static(settings.STATIC_URL, view=cache_control(no_cache=True, must_revalidate=True)(serve)) \
   + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

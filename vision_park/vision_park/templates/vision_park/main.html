@@ -7,7 +7,8 @@ Ace of Base
 {% block content %}
 {% load static %}
 <div class="container mt-3 text-center">
-    <h2>ACE OF BASE</h2>
+
+<h2 class="title is-2">ACE OF BASE</h2>
 
     {% for message in messages %}
         <h3 class="justify-content-center" style="margin-left: 0px; margin-bottom: 30px"> {{ message }}</h3>
@@ -15,16 +16,17 @@ Ace of Base
 
     {% if user.is_authenticated %}
     <div class="quote" style="margin-top: 30px; text-align: center;" itemscope="" itemtype="http://schema.org/CreativeWork" >
-        <h3>Welcome {{ request.user }} in Vision Park!</h3>
+        <h3 class="title is-3">Welcome {{ request.user }} in Vision Park!</h3>
     </div>
     {% else %}
     <div class="quote" style="margin-top: 30px; text-align: center;" itemscope="" itemtype="http://schema.org/CreativeWork">
-        <h3>Welcome!</h3>
-        <h4>To start using <b>Vision Parking</b>, You must log in to your account!</h4>
+        <h3 class="title is-3">Welcome!</h3>
+        <h4 class="title is-4">To start using <b>Vision Parking</b>, You must log in to your account!</h4>
     </div>
     {% endif %}
 
-    <img style="margin-top: 30px;" src="{% static 'vision_park/logo-compressed1.jpg' %}" alt="Main Logo" class="rounded-logo">
+
+    <img style="margin-top: 30px;" src="{% static 'img/logo-compressed1.jpg' %}" alt="Main Logo" class="rounded-logo">
 </div>
 
 {% endblock %}

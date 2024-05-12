@@ -13,6 +13,10 @@
             integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
             crossorigin="anonymous"
     />
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
+    >
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css?family=DM Sans" rel="stylesheet"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"/>
@@ -20,20 +24,24 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     {% load static %}
-    <link rel="stylesheet" href="{% static 'vision_park/docs.css' %}"/>
-    <link rel="stylesheet" href="{% static 'vision_park/messages.css' %}"/>
-    <link rel="stylesheet" href="{% static 'vision_park/styles.css' %}"/>
-    <link rel="stylesheet" href="{% static 'vision_park/css/all.min.css' %}"/>
+
+    <!--    <link rel="stylesheet" href="{% static 'css/style.css' %}">-->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=1"/>
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}"/>
     <link rel="icon" href="{% static 'vision_park/favicon.png' %}"/>
 
-    <title>{{title}}</title>
+    <title>{% block title %}{% endblock %}</title>
+
 </head>
 <body>
 <main class="d-flex flex-nowrap">
+
+
     <div class="sidebar d-flex flex-column flex-shrink-0 p-3 text-bg-custom">
+
+
         <a href="/" class="mx-auto mb-1 text-white text-decoration-none">
-            <!--          <svg class="bi pe-none me-2" width="10" height="32"><use xlink:href="#bootstrap" /></svg>-->
-            <img src="{% static 'vision_park/logo.webp' %}" title="Vision Park Team" alt="Vision Park Team"
+            <img src="{% static 'img/logo.png' %}" title="Vision Park Team" alt="Vision Park Team"
                  style="max-width: 60px; width: 100%;"/>
             <span id="team-long" class="ms-1 fs-4" title="Vision Park Team">Vision Park Team</span>
         </a>
@@ -42,88 +50,92 @@
         <ul class="nav nav-pills flex-column">
             <li>
                 <a class="nav-link {% if active_menu == 'parking_area' %}active{% else %}text-white{% endif %}"
-                    href="{% url 'parking_area:parking_area' %}">
-                    <img src="{% static 'vision_park/1-menu-parking1.png' %}" alt="Parking Icon"
-                         style="width: 24px; height: 24px; float: left; margin-right: 8px;">
-                    <span class="nav-item mx-auto">Parking</span>
+                   href="{% url 'parking_area:parking_area' %}">
+                    <span class="icon-text">
+                            <box-icon name='car' color='#ffffff'></box-icon>
+                        <span class="nav-item mx-auto">Parking</span>
+                    </span>
                 </a>
             </li>
             {% if user.is_authenticated %}
-                {% if user.is_superuser %}
-                    <li>
-                        <a class="nav-link {% if active_menu == 'car_recognize' %}active{% else %}text-white{% endif %}"
-                            href="{% url 'recognize:main' %}">
-                            <img src="{% static 'vision_park/4-menu-recognize.png' %}" alt="Recognition Icon"
-                                style="width: 24px; height: 24px; float: left; margin-right: 8px;">
-                            <span class="nav-item">Car Recognize</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link {% if active_menu == 'finance' %}active{% else %}text-white{% endif %}"
-                            href="{% url 'finance:tariffs' %}">
-                            <img src="{% static 'vision_park/3-menu-register.png' %}" alt="Finance Icon"
-                                style="width: 24px; height: 24px; float: left; margin-right: 8px;">
-                            <span class="nav-item">Tariffs</span>
-                        </a>
-                    </li>
-                {% else %}
-                    <li>
-                        <a class="nav-link {% if active_menu == 'accounts' %}active{% else %}text-white{% endif %}"
-                            href="{% url 'accounts:profile' %}">
-                            <img src="{% static 'vision_park/6-menu-profile.png' %}" alt="Profile Icon"
-                                style="width: 24px; height: 24px; float: left; margin-right: 8px;">
-                            <span class="nav-item">Profile</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link {% if active_menu == 'finance' %}active{% else %}text-white{% endif %}"
-                            href="{% url 'finance:payments_user' %}">
-                            <img src="{% static 'vision_park/3-menu-register.png' %}" alt="Finance Icon"
-                                style="width: 24px; height: 24px; float: left; margin-right: 8px;">
-                            <span class="nav-item">Finance</span>
-                        </a>
-                    </li>
-                {% endif %}
+            {% if user.is_superuser %}
+            <li>
+                <a class="nav-link {% if active_menu == 'car_recognize' %}active{% else %}text-white{% endif %}"
+                   href="{% url 'recognize:main' %}">
+                    <box-icon name='camera-movie' color='#ffffff'></box-icon>
+                    <span class="nav-item">Car Recognize</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-link {% if active_menu == 'finance' %}active{% else %}text-white{% endif %}"
+                   href="{% url 'finance:tariffs' %}">
+                    <box-icon name='money-withdraw' color='#ffffff'></box-icon>
+                    <span class="nav-item">Tariffs</span>
+                </a>
+            </li>
+            {% else %}
+
+            <li>
+                <a class="nav-link {% if active_menu == 'accounts' %}active{% else %}text-white{% endif %}"
+                   href="{% url 'accounts:profile' %}">
+                    <span class="icon-text">
+                        <box-icon name='user-circle' color='#ffffff'></box-icon>
+                        <span class="nav-item mx-auto">Profile</span>
+                    </span>
+                </a>
+            </li>
+
+            <li>
+                <a class="nav-link {% if active_menu == 'finance' %}active{% else %}text-white{% endif %}"
+                   href="{% url 'finance:payments_user' %}">
+                    <span class="icon-text">
+                        <box-icon name='money' color='#ffffff'></box-icon>
+                        <span class="nav-item mx-auto">Finance</span>
+                    </span>
+                </a>
+            </li>
+
+            {% endif %}
+
             <li>
                 <a class="nav-link {% if active_menu == 'logout' %}active{% else %}text-white{% endif %}"
-                    href="{% url 'accounts:logout' %}">
-                    <img src="{% static 'vision_park/5-menu-logout.png' %}" alt="Logout Icon"
-                        style="width: 24px; height: 24px; float: left; margin-right: 8px;">
-                    <span class="nav-item">Logout</span>
+                   href="{% url 'accounts:logout' %}">
+                    <span class="icon-text">
+                        <box-icon name='log-out' color='#ffffff'></box-icon>
+                        <span class="nav-item mx-auto">Logout</span>
+                    </span>
                 </a>
             </li>
             {% else %}
             <li>
                 <a class="nav-link {% if active_menu == 'signin' %}active{% else %}text-white{% endif %}"
-                    href="{% url 'accounts:login' %}">
-                    <img src="{% static 'vision_park/2-menu-login.png' %}" alt="Register Icon"
-                         style="width: 24px; height: 24px; float: left; margin-right: 8px;">
-                    <span class="nav-item">Login</span>
+                   href="{% url 'accounts:login' %}">
+                    <span class="icon-text">
+                        <box-icon name='log-in' color='#ffffff'></box-icon>
+                        <span class="nav-item mx-auto">Login</span>
+                    </span>
                 </a>
             </li>
+
             <li>
                 <a class="nav-link {% if active_menu == 'signup' %}active{% else %}text-white{% endif %}"
-                        href="{% url 'accounts:register' %}">
-                    <img src="{% static 'vision_park/3-menu-register.png' %}" alt="Register Icon"
-                         style="width: 24px; height: 24px; float: left; margin-right: 8px;">
-                    <span class="nav-item">To Register</span>
+                   href="{% url 'accounts:register' %}">
+                    <span class="icon-text">
+                        <box-icon name='id-card' color='#ffffff'></box-icon>
+                        <span class="nav-item mx-auto">Register</span>
+                    </span>
                 </a>
             </li>
             {% endif %}
         </ul>
-        </hr>
+        <hr class="m-2"/>
         <div class="dropdown">
-            <a
-                    href="#"
-                    class="d-flex align-items-center text-white text-decoration-none"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
+            <a href="#" class="d-flex align-items-center text-white text-decoration-none"
+               data-bs-toggle="dropdown"
+               aria-expanded="false"
             >
-
                 {% if user.is_authenticated %}
-                <img src="{% static 'vision_park/favicon.png' %}" alt="" width="32" height="32"
-                     class="rounded-circle me-2"/>
-                <strong>{{user.username}}</strong><span style="color: #00d000"> &#9679;</span>
+                <strong>{{user.username}}</strong>
                 {% else %}
                 {% endif %}
             </a>
@@ -138,23 +150,5 @@
         {% endblock %}
     </div>
 </main>
-
-<!-- <footer class="footer mt-auto py-3 bg-dark">
-<div class="container">
-    <span class="text-light">Developed by the NeuronCurveBobr team. &copy; 2024. All rights reserved.</span>
-    <span class="text-light">Contact us:
-        <a href="mailto:info@neuroncurvebobr.com" target="_blank" class="link-light">
-            <i class="fa-solid fa-envelopes-bulk"></i>
-            info@neuroncurvebobr.com
-        </a>
-    </span>
-    <span class="text-light">Follow us:
-        <a href="https://t.me/fastparking_bobr_bot" target="_blank" class="link-light">
-            <i class="fa-brands fa-telegram"></i>
-            Telegram bot
-        </a>
-    </span>
-</div>
-</footer> -->
 </body>
 </html>

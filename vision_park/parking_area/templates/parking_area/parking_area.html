@@ -1,8 +1,13 @@
 {% extends "vision_park/base.html" %}
+
+{% block title %}
+Ace of base
+{% endblock %}
+
 {% block content %}
 {% load static %}
 <div class="px-1 my-2 text-center">
-    <h3 class="display-6 fw-bold">ACE OF BASE</h3>
+    <h2 class="title is-2">ACE OF BASE</h2>
     <div class="col-lg-8 mx-auto">
         <div class="mt-2 mb-2 pt-2 pb-2" style="background: linear-gradient(145deg, #ffffff, #e6e6e6); border: 2px solid #ccc; border-radius: 8px; box-shadow: 5px 5px 15px rgba(0,0,0,0.1);">
             <div class="mb-2" style="font-size: 1.2em; font-weight: bold; color: #333;">
@@ -10,16 +15,17 @@
             </div>
             <div class="progress ms-2 me-2" style="height: 20px; background-color: #f8f9fa;">
                 <div
-                    class="progress-bar"
-                    role="progressbar"
-                    style="width: {{ parking_progress }}%; background-color: #28a745;"
-                    aria-valuenow="{{ parking_progress }}"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
+                        class="progress-bar"
+                        role="progressbar"
+                        style="width: {{ parking_progress }}%; background-color: #28a745;"
+                        aria-valuenow="{{ parking_progress }}"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
                 >
                     {{ parking_progress }}%
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -41,10 +47,12 @@
             url: "/parking_area/get_parking_spaces/",
             type: "GET",
             success: function (data) {
-                const parkingSpaces = data;
-                console.log(parkingSpaces);
+                const userParkingSpaces = data.user_parking_spaces;
+                const allParkingSpaces = data.all_parking_spaces;
+                console.log(userParkingSpaces);
+                console.log(allParkingSpaces);
                 for (let i = 0; i < totalSpaces; i++) {
-                    const spaceData = parkingSpaces[i];
+                    const spaceData = allParkingSpaces[i];
 
                     const space = document.createElement("div");
                     space.className = "space";
@@ -57,15 +65,19 @@
                     spaceNumber.style.color = "white";
                     space.appendChild(spaceNumber);
 
+
                     if (spaceData.is_occupied) {
 
                         const carImg = document.createElement("img");
-                        carImg.src = "{% static 'vision_park/car.png' %}"
+                        if (userParkingSpaces.some(space => space.user_parking_number === spaceData.number)) {
+                            carImg.src = "{% static 'img/user_car.png' %}"
+                        } else {
+                            carImg.src = "{% static 'img/car.png' %}"
+                        }
                         carImg.className = "car";
                         carImg.style.width = "100%";
                         space.appendChild(carImg);
                     }
-
                     parkingLot.appendChild(space);
                 }
             },
@@ -75,27 +87,4 @@
         });
     });
 </script>
-<!--document.addEventListener("DOMContentLoaded", function() {-->
-<!--    const parkingLot = document.querySelector(".parking-lot");-->
-<!--    const numSpacesPerRow = 10;-->
-<!--    const numRows = 2;-->
-<!--    const totalSpaces = numSpacesPerRow * numRows;-->
-
-<!--    for (let i = 0; i < totalSpaces; i++) {-->
-<!--      const carImg = document.createElement("img");-->
-<!--        carImg.src = "{% static 'vision_park/car.png' %}"-->
-<!--        carImg.className = "car";-->
-<!--        carImg.style.width = "100%";-->
-
-<!--        const space = document.createElement("div");-->
-<!--        space.className = "space";-->
-<!--        space.style.left = `${(i % numSpacesPerRow) * 10}%`;-->
-<!--        space.style.top = `${Math.floor(i / numSpacesPerRow) * 55}%`;-->
-<!--        parkingLot.appendChild(space);-->
-<!--        space.appendChild(carImg);-->
-<!--    }-->
-<!--});-->
-
-
-<!--</script>-->
 {% endblock %}

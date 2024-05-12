@@ -11,6 +11,8 @@ import pytesseract
 INPUT_WIDTH = 640
 INPUT_HEIGHT = 640
 
+pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 datascience_path = os.path.join(BASE_DIR, 'datascience')

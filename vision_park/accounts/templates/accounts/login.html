@@ -1,43 +1,46 @@
 {% extends "vision_park/base.html" %}
 
-{% block content %}
-<h1>Login</h1>
+{% block title %}
+Login
+{% endblock %}
 
-<!-- Виводимо Flash сповіщення-->
+{% block content %}
+<h2 class="title is-2">Login</h2>
+
 {% if messages %}
 {% for message in messages %}
-<div {% if message.tags %} style="width: 25%;" class="alert alert-{{message.tags}}" {% endif %} role="alert">
-    {{message}}
-</div>
+<article class="message is-danger">
+    <div class="message-body">
+        {{ message }}
+    </div>
+</article>
 {% endfor %}
 {% endif %}
 
-<!-- Обробляємо помилки форми які не відносяться до полів -->
 {% if form.errors %}
-<div style="width: 25%;" class="alert alert-danger" role="alert">
-    {{ form.non_field_errors}}
-</div>
+<article class="message is-danger">
+    <div class="message-body">
+        {{ form.non_field_errors}}
+    </div>
+</article>
 {% endif %}
 
-<form method="post">
+<form class="field" style="width: 50%" method="post">
     {% csrf_token %}
-    <div class="form-row">
-        <div style="width: 25%;" class="mb-3">
-            <label class="form-label">Username</label>
-            {{form.username}}
+
+    <label class="label">Username</label>
+    {{form.username}}
+
+    <label style="margin-top: 20px" class="label" for="free_period">Password</label>
+    {{form.password}}
+
+    <div class="field is-grouped" style="margin-top: 20px">
+        <div class="control">
+            <button class="button is-link" style="background: #125C13" type="submit">Confirm</button>
         </div>
-        <span>{{form.errors.username}}</span>
     </div>
-    <div class="form-row">
-        <div style="width: 25%;" class="mb-3">
-            <label class="form-label">Password</label>
-            {{form.password}}
-        </div>
-        <span>{{form.errors.password}}</span>
-    </div>
-    <button type="submit" class="btn btn-primary">Confirm</button>
-    <div class="small" style="padding-top: 15px;">
-        <a href="{% url 'accounts:password_reset' %}">Forgot Password?</a>
+    <div class="small">
+        <a style="color: #333333" href="{% url 'accounts:password_reset' %}">Forgot Password?</a>
     </div>
 </form>
 {% endblock %}
