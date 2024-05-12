@@ -1,15 +1,17 @@
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.urls import resolve, reverse
+from django.db.models import Q
 
 from .forms import RegisterForm, LoginForm
-from .models import CustomUser
-from recognize.models import Car
+from recognize.models import Car, ParkingSession
 
 
 class RegisterView(View):
@@ -82,11 +84,14 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
 @login_required
 def profile_add_car(request):
     if request.method == 'POST':
-        car_license_plate = request.POST.get('car_license_plate')
-        car = Car.objects.get(license_plate=car_license_plate)
-        car.owner_id = request.user.id
-        car.save()
-        return redirect(to='accounts:profile')
+        if 'add_license_plate' in request.POST:
+            car_license_plate = request.POST.get('add_license_plate')
+            car = Car.objects.get(license_plate=car_license_plate)
+            car.owner_id = request.user.id
+            car.save()
+            return redirect(to='accounts:profile')
+        else:
+            return HttpResponseRedirect(reverse('accounts:profile'))
     else:
         user_cars = Car.objects.filter(owner=request.user)
         available_cars = Car.objects.filter(owner__isnull=True)
@@ -94,7 +99,26 @@ def profile_add_car(request):
                    'available_cars': available_cars}
         return render(request, 'accounts/profile_add_cars.html', context)
 
-
+    
+@login_required
+def profile_action(request, pk):
+    if request.method == 'POST':
+        if 'delete_license_plate' in request.POST:
+            try:
+                car = get_object_or_404(Car, id=pk)
+                car_session_parking = ParkingSession.objects.filter(car_id=pk, total_cost__gt=0).exists()
+                if car_session_parking:
+                    messages.error(request, 'Payment has already been registered for this car number.')
+                else:
+                    car.owner = None
+                    car.save()
+            except Car.DoesNotExist:
+                messages.error(request, 'Car does not exist.')
+            return redirect('accounts:profile')
+        else:
+            return redirect('accounts:profile')
+    else:
+        return redirect('accounts:profile')
 
 # @login_required
 # def profile(request):

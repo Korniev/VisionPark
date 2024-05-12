@@ -6,14 +6,6 @@ Profile
 
 {% block content %}
 
-{% if messages %}
-{% for message in messages %}
-<div {% if message.tags %} style="width: 25%;" class="alert alert-{{message.tags}}" {% endif %} role="alert">
-    {{message}}
-</div>
-{% endfor %}
-{% endif %}
-
 {% if form.errors %}
 <div style="width: 25%;" class="alert alert-danger" role="alert">
     {{ form.non_field_errors}}
@@ -44,12 +36,12 @@ Profile
     </table>
     <br>
     <table class="table">
-      <form method="post" action="{% url 'accounts:profile' %}">
+      <form method="post" action="{% url 'accounts:profile' %}" name="add_license_plate">
         {% csrf_token %}
         <tr>
             <th><button type="submit">Add My License Plate</button></th>
             <td>
-              <select name="car_license_plate">
+              <select name="add_license_plate">
                 {% for car in available_cars %}
                   <option value="{{ car.license_plate }}">{{ car.license_plate }}</option>
                 {% empty %}
@@ -76,6 +68,14 @@ Profile
         <tr>
           <td>{{ car.license_plate }}</td>
           <td>{% if car.is_blocked %}Blocked{% else %}Unblocked{% endif %}</td>
+          <td>
+            <form method="post" action="{% url 'accounts:profile_action' car.id %}"
+                  name="delete_license_plate">
+              {% csrf_token %}
+              <input class="btn btn-danger" type="hidden" name="delete_license_plate" value="delete_license_plate">
+              <button class="btn btn-danger" type="submit">Delete</button>
+            </form>
+          </td>
         </tr>
       {% empty %}
         <tr>
@@ -84,6 +84,13 @@ Profile
       {% endfor %}
     </tbody>
   </table>
+  {% if messages %}
+    {% for message in messages %}
+      <div {% if message.tags %} style="width: 25%;" class="alert alert-{{message.tags}}" {% endif %} role="alert">
+        {{message}}
+      </div>
+    {% endfor %}
+  {% endif %}
 {% else %}
   <p>User has no cars</p>
 {% endif %}
