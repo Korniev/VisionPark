@@ -1,6 +1,35 @@
 {% extends "vision_park/base.html" %}
+
+{% block title %}
+List All Parking Sessions
+{% endblock %}
+
 {% block content %}
-    {% load static %}
+{% load static %}
+
+{% if user.is_superuser %}
+
+<h2 class="title is-2">List All Parking Sessions</h2>
+
+<br>
+<table class="table">
+    <tr>
+    <tr>
+        <th colspan="2">For download all parking sessions click</th>
+    </tr>
+    <tr>
+        <th>
+            <form method="post" action="{% url 'recognize:download_csv' %}"
+                  name="download_csv">
+                {% csrf_token %}
+                <input class="btn btn-secondary" type="hidden" name="download_csv" value="download_csv">
+                <button class="btn btn-secondary" type="submit">Save as CSV</button>
+            </form>
+        </th>
+    </tr>
+    </tr>
+</table>
+<br>
 
     {% if user.is_superuser %}
     <h2>List All Parking Sessions:</h2>
@@ -88,7 +117,12 @@
         {% endif %}
 
     {% else %}
-        <div class="p-2 bg-danger text-white">Recognize denied</div>
+    <p>There are no data</p>
     {% endif %}
+</div>
+
+{% else %}
+<div class="p-2 bg-danger text-white">Recognize denied</div>
+{% endif %}
 
 {% endblock content %}

@@ -7,9 +7,10 @@ Add New Tariff
 {% block content %}
 {% if user.is_superuser %}
 
-<h2 class="title is-2">Add New Tariff</h2>
+
 
 <form class="field" style="width: 50%" method="post" action="{% url 'finance:tariff_add' %}">
+    <h2 class="title is-2">Add New Tariff</h2>
     {% csrf_token %}
 
     <label class="label">Name</label>
