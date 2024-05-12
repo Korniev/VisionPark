@@ -1,0 +1,26 @@
+{% extends "vision_park/base.html" %}
+{% block content %}
+
+{% if user.is_superuser or user.is_authenticated %}
+{% csrf_token %}
+<h2>История сессий</h2>
+
+{% for session in sessions %}
+    <p>Сессия №{{ session.id }}</p>
+    <p>Номерной знак: {{ session.car }}</p>
+    <p>Дата начала: {{ session.start_time }}</p>
+    <p>Дата окончания: {{ session.end_time }}</p>
+    <p>Тариф: {{ session.tarif.name }}</p>
+    <p>Стоимость: {{ session.total_cost }}</p>
+    {% if not session.end_time %}
+        <a href="{% url 'finance:payment_preview' session.id %}">Pay</a>
+    {% endif %}
+{% empty %}
+    <p>История сессий пуста.</p>
+{% endfor %}
+
+{% else %}
+<div class="p-2 bg-danger text-white">Viewing is not possible</div>
+{% endif %}
+
+{% endblock content %}

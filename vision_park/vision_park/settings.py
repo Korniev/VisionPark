@@ -41,12 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'vision_park',
     'accounts.apps.AccountsConfig',
+    'finance.apps.FinanceConfig',
     'parking_area.apps.ParkingAreaConfig',
     'recognize.apps.RecognizeConfig'
 ]
 
 AUTH_USER_MODEL = "accounts.CustomUser"
-PARKING_SPACES_COUNT = 36
+PARKING_SPACES_COUNT = 20
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

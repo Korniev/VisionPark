@@ -1,0 +1,89 @@
+{% extends "vision_park/base.html" %}
+
+{% block content %}
+
+<!-- Виводимо Flash сповіщення-->
+{% if messages %}
+{% for message in messages %}
+<div {% if message.tags %} style="width: 25%;" class="alert alert-{{message.tags}}" {% endif %} role="alert">
+    {{message}}
+</div>
+{% endfor %}
+{% endif %}
+
+<!-- Обробляємо помилки форми які не відносяться до полів -->
+{% if form.errors %}
+<div style="width: 25%;" class="alert alert-danger" role="alert">
+    {{ form.non_field_errors}}
+</div>
+{% endif %}
+
+<h2>Profile</h2>
+  <div class="container" id="photo_result">
+    <table class="table">
+      <tbody>
+        <tr>
+            <th>Username:</th>
+            <td>{{ user_profile.username }}</td>
+        </tr>
+        <tr>
+            <th>E-mail Address:</th>
+            <td>{{ user_profile.email }}</td>
+        </tr>
+        <tr>
+            <th>Phone Number:</th>
+            <td>{{ user_profile.phone_number }}</td>
+        </tr>
+        <tr>
+            <th>Telegram Alias:</th>
+            <td>{{ user_profile.telegram_nickname }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <table class="table">
+      <form method="post" action="{% url 'accounts:profile' %}">
+        {% csrf_token %}
+        <tr>
+            <th><button type="submit">Add My License Plate</button></th>
+            <td>
+              <select name="car_license_plate">
+                {% for car in available_cars %}
+                  <option value="{{ car.license_plate }}">{{ car.license_plate }}</option>
+                {% empty %}
+                  <option value="">No available cars</option>
+                {% endfor %}
+              </select>
+            </td>
+        </tr>
+      </form>
+    </table>
+  </div>
+
+<h2>User cars</h2>
+{% if user_cars %}
+  <table>
+    <thead>
+      <tr>
+        <th>Number plate</th>
+        <th>Block status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for car in user_cars %}
+        <tr>
+          <td>{{ car.license_plate }}</td>
+          <td>{% if car.is_blocked %}Blocked{% else %}Unblocked{% endif %}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="2">User has no cars</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>User has no cars</p>
+{% endif %}
+
+{% endblock %}

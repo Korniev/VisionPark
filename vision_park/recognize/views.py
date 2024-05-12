@@ -1,14 +1,17 @@
-<<<<<<< Updated upstream
+
 import json
 
+import cv2
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django.utils.timezone import localtime
-from django.urls import resolve, reverse
+from django.urls import resolve
+from django.core.files.storage import FileSystemStorage
+from django.contrib import messages
+from django.db.models import Q
+from django.conf import settings
+
 
 from django.utils import timezone,formats
-=======
 import os
 import csv
 from datetime import datetime
@@ -19,7 +22,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import resolve, reverse
 from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
-from django.utils import timezone
 from django.db.models import Q
 from django.conf import settings
 from django.http import HttpResponseRedirect
@@ -31,22 +33,22 @@ from parking_area.models import ParkingSpace
 
 import cv2
 from utils.datascience.main_yolo5 import yolo_predictions, net
->>>>>>> Stashed changes
 
 
+@login_required
 def main(request):
     resolved_view = resolve(request.path)
     active_menu = resolved_view.app_name
-    # ваш код для обробки запиту тут
     return render(request, "recognize/main.html", {"active_menu": active_menu, "title": "Recognize"})
 
-def upload_file(request):
+
+@login_required
+def upload_out(request):
     resolved_view = resolve(request.path)
     active_menu = resolved_view.app_name
     context = {"active_menu": active_menu, "title": "CVM Recognize"}
-<<<<<<< Updated upstream
     return render(request, "recognize/upload.html", context)
-=======
+
     return render(request, "recognize/upload_out.html", context)
 
 
@@ -139,7 +141,7 @@ def tariff_insert(request):
         tariff_id = default_tariff.id
     return tariff_id
 
-
+  
 @login_required
 def session_view(request):
     # Виконуємо [JOIN] таблиці [Car] з таблицею [ParkingSession] за допомогою [select_related]
@@ -251,4 +253,3 @@ def download_csv(request):
                 messages.success(request, f'The file {filename} was\nsuccessfully saved to the /media directory.')
             return HttpResponseRedirect(reverse('recognize:session_view'))
     return HttpResponseRedirect(reverse('recognize:session_view'))
->>>>>>> Stashed changes
