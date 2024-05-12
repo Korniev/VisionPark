@@ -74,7 +74,7 @@ def tariff_complete(request, tariff_id):
             if end_time == "complete":
                 tariff.end_time = timezone.now()
                 tariff.save()
-                messages.success(request, 'Tariff is been expired.')
+                messages.success(request, 'Tariff has been expired.')
                 return redirect(to='finance:tariffs')
         else:
             messages.error(request, 'You do not have the rights to change tariffs.')
