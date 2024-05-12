@@ -8,6 +8,7 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='register'),
     path('login/', views.LoginView.as_view(), name='login'),
     path('profile/', views.profile_add_car, name='profile'),
+    path('profile/delete/<int:pk>/', views.profile_action, name='profile_action'),
     # path('add_car/', views.profile_add_car, name='add_car'),
 #     path('add-car/', views.add_car, name='add_car'),
 #     path('delete/<int:pk>', views.delete, name='delete'),

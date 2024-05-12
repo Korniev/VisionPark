@@ -1,14 +1,3 @@
-import json
-
-import cv2
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.urls import resolve
-from django.core.files.storage import FileSystemStorage
-from django.contrib import messages
-from django.db.models import Q
-from django.conf import settings
-
 from django.utils import timezone, formats
 import os
 import csv
@@ -54,30 +43,35 @@ def upload_in(request):
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            image_file = request.FILES['image']
-            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'incoming'))
-            # fs = FileSystemStorage(location='media/incoming/')
-            filename = fs.save(image_file.name, image_file)
+            try:
+                image_file = request.FILES['image']
+                fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'incoming'))
+                # fs = FileSystemStorage(location='media/incoming/')
+                filename = fs.save(image_file.name, image_file)
 
-            image_path = fs.path(filename)
-            img = cv2.imread(image_path)
-            result_img, recognized_text = yolo_predictions(img, net)
+                image_path = fs.path(filename)
+                img = cv2.imread(image_path)
+                result_img, recognized_text = yolo_predictions(img, net)
 
-            result_filename = 'processed_' + filename
-            cv2.imwrite(os.path.join(fs.location, result_filename), result_img)
-            result_img_url = fs.url('incoming/' + result_filename)
+                result_filename = 'processed_' + filename
+                cv2.imwrite(os.path.join(fs.location, result_filename), result_img)
+                result_img_url = fs.url('incoming/' + result_filename)
 
-            thumbnail_size = (300, 200)
-            thumbnail = cv2.resize(img, thumbnail_size, interpolation=cv2.INTER_AREA)
-            thumbnail_filename = 'thumbnail_' + filename
-            cv2.imwrite(os.path.join(fs.location, thumbnail_filename), thumbnail)
-            thumbnail_image = fs.url('incoming/' + thumbnail_filename)
+                thumbnail_size = (300, 200)
+                thumbnail = cv2.resize(img, thumbnail_size, interpolation=cv2.INTER_AREA)
+                thumbnail_filename = 'thumbnail_' + filename
+                cv2.imwrite(os.path.join(fs.location, thumbnail_filename), thumbnail)
+                thumbnail_image = fs.url('incoming/' + thumbnail_filename)
 
-            return render(request, 'recognize/result_in.html', {
-                'recognized_area': result_img_url,
-                'recognized_image': thumbnail_image,
-                'recognized_text': recognized_text
-            })
+                return render(request, 'recognize/result_in.html', {
+                    'recognized_area': result_img_url,
+                    'recognized_image': thumbnail_image,
+                    'recognized_text': recognized_text
+                })
+            except AttributeError:
+                return render(request, 'recognize/result_in.html',
+                    {'messages': ['The CV model could not recognize anything.'],
+                    'recognized_area': '', 'recognized_image': '', 'recognized_text': ''})
     else:
         form = ImageUploadForm()
     return render(request, 'recognize/upload_in.html', {'form': form})
@@ -156,49 +150,61 @@ def session_view(request):
 def session_action(request, pk):
     if request.method == 'POST':
         if request.user.is_superuser:
+            # if 'close_session' in request.POST:
+            #     session_parking = get_object_or_404(ParkingSession.objects.select_related('tarif'), id=pk)
+            #     time_difference_minutes = (timezone.now() - session_parking.start_time).total_seconds() / 60
+            #     time_outgoing_minutes = (timezone.now() - session_parking.end_time).total_seconds() / 60
+            #     if time_difference_minutes <= session_parking.tarif.free_period:
+            #         session_parking.end_session = True
+            #         session_parking.save()
+            #         parking_space = get_object_or_404(ParkingSpace, id=session_parking.parking_number_id)
+            #         parking_space.is_occupied = False
+            #         parking_space.save()
+            #         messages.success(request, 'Parking has been successfully completed.')
+            #     else:
+            #         if session_parking.total_cost:
+            #             if time_outgoing_minutes <= 5:
+            #                 session_parking.end_session = True
+            #                 session_parking.save()
+            #                 parking_space = get_object_or_404(ParkingSpace, id=session_parking.parking_number_id)
+            #                 parking_space.is_occupied = False
+            #                 parking_space.save()
+            #                 messages.success(request, 'Parking has been successfully completed.')
+            #             else:
+            #                 session_parking.end_session = True
+            #                 session_parking.save()
+            #                 parking_space = get_object_or_404(ParkingSpace, id=session_parking.parking_number_id)
+            #                 parking_space.is_occupied = False
+            #                 parking_space.save()
+            #                 messages.warning(request, 'Attention! checkout time limit exceeded.')
+            #         else:
+            #             messages.error(request, 'The free parking time has been exceeded.')
             if 'close_session' in request.POST:
                 session_parking = get_object_or_404(ParkingSession.objects.select_related('tarif'), id=pk)
+                parking_space = get_object_or_404(ParkingSpace, id=session_parking.parking_number_id)
                 time_difference_minutes = (timezone.now() - session_parking.start_time).total_seconds() / 60
-                #TODO
+                
                 if time_difference_minutes <= session_parking.tarif.free_period:
                     session_parking.end_session = True
-                    session_parking.save()
-                    parking_space = get_object_or_404(ParkingSpace, id=session_parking.parking_number_id)
                     parking_space.is_occupied = False
-                    parking_space.save()
                     messages.success(request, 'Parking has been successfully completed.')
                 else:
-                    messages.error(request, 'The free parking time has been exceeded.')
-            elif 'unblock' in request.POST:
-                session_parking = get_object_or_404(ParkingSession, id=pk)
-                car = get_object_or_404(Car, id=session_parking.car.id)
-                car.is_blocked = False
-                car.save()
-            elif 'ban' in request.POST:
-                session_parking = get_object_or_404(ParkingSession, id=pk)
-                car = get_object_or_404(Car, id=session_parking.car.id)
-                car.is_blocked = True
-                car.save()
-            return HttpResponseRedirect(reverse('recognize:session_view'))
-    return HttpResponseRedirect(reverse('recognize:session_view'))
+                    if session_parking.total_cost > 0:
+                        time_outgoing_minutes = (timezone.now() - session_parking.end_time).total_seconds() / 60
+                        if time_outgoing_minutes <= 5:
+                            session_parking.end_session = True
+                            parking_space.is_occupied = False
+                            messages.success(request, 'Parking has been successfully completed.')
+                        else:
+                            session_parking.end_session = True
+                            parking_space.is_occupied = False
+                            messages.warning(request, 'Attention! checkout time limit exceeded.')
+                    else:
+                        messages.error(request, 'The free parking time has been exceeded.')
 
+                session_parking.save()
+                parking_space.save()
 
-@login_required
-def session_action(request, pk):
-    if request.method == 'POST':
-        if request.user.is_superuser:
-            if 'close_session' in request.POST:
-                session_parking = get_object_or_404(ParkingSession.objects.select_related('tarif'), id=pk)
-                time_difference_minutes = (timezone.now() - session_parking.start_time).total_seconds() / 60
-                if time_difference_minutes <= session_parking.tarif.free_period:
-                    session_parking.end_session = True
-                    session_parking.save()
-                    parking_space = get_object_or_404(ParkingSpace, id=session_parking.parking_number_id)
-                    parking_space.is_occupied = False
-                    parking_space.save()
-                    messages.success(request, 'Parking has been successfully completed.')
-                else:
-                    messages.error(request, 'The free parking time has been exceeded.')
             elif 'unblock' in request.POST:
                 session_parking = get_object_or_404(ParkingSession, id=pk)
                 car = get_object_or_404(Car, id=session_parking.car.id)

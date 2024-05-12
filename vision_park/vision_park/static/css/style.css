@@ -173,3 +173,15 @@ footer .icon {
     position: absolute;
     box-sizing: border-box;
 }
+
+.messages .danger {
+    color: red;
+}
+
+.messages .success {
+    color: green;
+}
+
+.messages .warning {
+    color: orange;
+}
