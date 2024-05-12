@@ -1,20 +1,24 @@
 {% extends "vision_park/base.html" %}
+{% block title %}
+Car For Enter
+{% endblock %}
+
 {% block content %}
 
 {% if user.is_superuser %}
+<h2 class="title is-2">Upload photo of car for enter</h2>
 <form method="post" enctype="multipart/form-data" style="margin-top: 30px; margin-left: 20px;">
   {% csrf_token %}
-  {{ form.as_p }}
+ {{ form.as_p }}
   <p>{{ form.photo.label_tag }} {{ form.photo }}</p>
-  <div class="container">
-    <ul class="list-group list-group-horizontal">
-      <li class="list-group-item">
-        <input class="btn btn-primary" type="submit" value="Submit"/>
-      </li>
-      <li class="list-group-item">
-        <a href="{% url 'recognize:main' %}" class="btn btn-primary">Back</a>
-      </li>
-    </ul>
+  <div class="field is-grouped" style="margin-top: 20px">
+    <div class="control">
+      <button class="button is-link" style="background: #125C13" type="submit">Submit</button>
+    </div>
+    <div class="control">
+      <a class="button is-link is-light" style="background: #d9e7ce; color: #333333" href="{% url 'recognize:main' %}"
+         class="btn btn-primary">Back</a>
+    </div>
   </div>
 </form>
 

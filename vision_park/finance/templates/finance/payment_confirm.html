@@ -1,22 +1,52 @@
 {% extends "vision_park/base.html" %}
-{% block content %}
 
+{% block title %}
+Payment confirmation
+{% endblock %}
+
+{% block content %}
 {% if user.is_authenticated %}
-<h2>Payment confirmation</h2>
-<br>
-<h3>Ваша сессия паркування № {{ session.id }} успiшно сплачена</h3>
-<br>
-<p>Номерной знак: {{ session.car }}</p>
-<p>Тариф: {{ session.tarif.name }}</p>
-<p>Стоимость: {{ session.total_cost|floatformat:2 }}</p>
-<br>
-<h3>Щасливого путi.</h3>
-<br>
-<div>
-    <a href="{% url 'finance:payments_user' %}" class="btn btn-primary">Back</a>
+<h2 class="title is-2">Payment confirmation</h2>
+<h4 class="title is-4">Your parking session № {{ session.id }} has been successfully paid!</h4>
+<h4 class="title is-4">Happy journey!</h4>
+<div class="table-container" style=" margin-top: 30px;">
+    <table class="table is-fullwidth">
+        <thead>
+        <tr>
+            <th>Session №</th>
+            <th>License Plate</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Tariff</th>
+            <th>Cost</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>{{ session.id }}</td>
+            <td>{{ session.car }}</td>
+            <td>{{ session.start_time }}</td>
+            <td>{{ session.end_time }}</td>
+            <td>{{ session.tarif.name }}</td>
+            <td>{{ total_cost|floatformat:2 }}</td>
+        </tr>
+
+        </tbody>
+    </table>
 </div>
+
+<div class="control">
+    <a class="button is-link is-light" style="background: #d9e7ce; color: #333333"
+       href="{% url 'finance:payments_user' %}" class="btn btn-primary">Back</a>
+</div>
+
 {% for message in messages %}
-<h3 class="justify-content-center" style="margin-left: 0px; margin-bottom: 30px"> {{ message }}</h3>
+<article class="message is-danger">
+    <div class="message-body">
+        {{ message }}
+    </div>
+</article>
 {% endfor %}
 
 {% else %}

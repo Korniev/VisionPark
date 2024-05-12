@@ -1,8 +1,11 @@
 {% extends "vision_park/base.html" %}
 
+{% block title %}
+Profile
+{% endblock %}
+
 {% block content %}
 
-<!-- Виводимо Flash сповіщення-->
 {% if messages %}
 {% for message in messages %}
 <div {% if message.tags %} style="width: 25%;" class="alert alert-{{message.tags}}" {% endif %} role="alert">
@@ -11,14 +14,13 @@
 {% endfor %}
 {% endif %}
 
-<!-- Обробляємо помилки форми які не відносяться до полів -->
 {% if form.errors %}
 <div style="width: 25%;" class="alert alert-danger" role="alert">
     {{ form.non_field_errors}}
 </div>
 {% endif %}
 
-<h2>Profile</h2>
+<h2 class="title is-2">Profile</h2>
   <div class="container" id="photo_result">
     <table class="table">
       <tbody>

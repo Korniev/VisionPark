@@ -1,12 +1,17 @@
 {% extends "vision_park/base.html" %}
+
+{% block title %}
+Result Recognized
+{% endblock %}
+
 {% block content %}
 {% load static %}
 
 {% if user.is_superuser %}
+<h2 class="title is-2">Result Recognized Incoming Auto</h2>
 <form method="post" action="{% url 'recognize:result_in' %}">
   {% csrf_token %}
   <div class="container" id="photo_result">
-    <h2>Result Recognized Incoming Auto:</h2>
     <table class="table">
       <tbody>
         <tr>
@@ -22,21 +27,23 @@
           <td>{{ recognized_text }}</td>
         </tr>
         <tr>
-          <th><button type="submit">Update License Plate</button></th>
+          <th><button class="button is-link" style="background: #125C13" type="submit">Update License Plate</button></th>
           <td><input type="text" name="recognized_text" value="{{ recognized_text }}" maxlength="20"></td>
         </tr>
       </tbody>
     </table>
   </div>
   {% if messages %}
-  <div style="width: 25%; margin: 0 auto;">
-    <ul class="messages">
-        {% for message in messages %}
-            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
+{% for message in messages %}
+<article class="message is-danger">
+  <div class="message-body">
+{{ message }}
   </div>
+</article>
+{% endfor %}
   {% endif %}
+
+
 </form>
 {% else %}
 <div class="p-2 bg-danger text-white">Recognize denied</div>

@@ -1,19 +1,47 @@
 {% extends "vision_park/base.html" %}
+
+{% block title %}
+Tariffs Complete Preview
+{% endblock %}
+
 {% block content %}
-
 {% if user.is_authenticated %}
-<h2>Tariff Complete preview</h2>
+<h2 class="title is-2">Tariffs Complete Preview</h2>
 
-<p>Tariff name: {{ tariff.name }}</p>
-<p>Free period (in minutes): {{ tariff.free_period }}</p>
-<p>Cost per hour {{ tariff.cost_per_hour }}</p>
-<p>Start of action: {{ tariff.start_time }}</p>
+<div class="table-container" style=" margin-top: 30px;">
+    <table class="table is-fullwidth">
+        <thead>
+        <tr>
+            <th>Tariff name</th>
+            <th>Free period (in minutes)</th>
+            <th>Cost per hour</th>
+            <th>Start of action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ tariff.name }}</td>
+            <td>{{ tariff.free_period }}</td>
+            <td>{{ tariff.cost_per_hour }}</td>
+            <td>{{ tariff.start_time }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
 
 <form method="post" action="{% url 'finance:tariff_complete' tariff.id %}">
     {% csrf_token %}
-    <input class="btn btn-danger" type="hidden" name="end_time" value="complete">
-    <button class="btn btn-danger" type="submit" name="confirm">Confirm</button>
-    <a href="{% url 'finance:tariffs' %}" class="btn btn-primary">Back</a>
+    <div class="field is-grouped" style="margin-top: 20px">
+            <input class="btn btn-danger" type="hidden" name="end_time" value="{{ tariff.end_time }}">
+    <div class="control">
+      <button class="button is-link" style="background: #125C13" type="submit" name="confirm"type="submit">Confirm</button>
+    </div>
+    <div class="control">
+      <a class="button is-link is-light" style="background: #d9e7ce; color: #333333" href="{% url 'finance:tariffs' %}"
+         class="btn btn-primary">Back</a>
+    </div>
+  </div>
 </form>
 
 {% for message in messages %}

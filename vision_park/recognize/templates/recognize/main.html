@@ -1,41 +1,56 @@
 {% extends "vision_park/base.html" %}
+
+{% block title %}
+Recognize
+{% endblock %}
+
 {% block content %}
 {% load static %}
 <div class="container">
-  <div class="row justify-content-center" style="margin-top: 50px;">
-    <!-- <div class="col-md-4">
-            <div class="card bg-primary">
-                <div class="card-body">
-                    <a href="{% url 'recognize:upload_in' %}" class="btn btn-primary btn-lg btn-block">Upload photo of car</a>
+
+    <div class="row justify-content-center" style="margin-top: 50px;">
+        <div class="col-md-6 d-flex align-items-center">
+            <a href="{% url 'recognize:upload_in' %}" class="btn btn-lg btn-block">
+                <div class="card">
+                    <div class="card-image">
+                        <figure class="image is-4by3">
+                            <img src="{% static 'img/logo-compressed2.jpg' %}" alt="Placeholder image"/>
+                        </figure>
+
+                    </div>
+                    <div class="card-content">
+                        <div class="media">
+                            <div class="media-content">
+                                <p class="title is-3">Upload photo of car for enter</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </a>
+        </div>
+
+
+        <div class="col-md-6 d-flex align-items-center">
+            <div class="card-body mx-auto text-center">
+                <a href="{% url 'recognize:session_view' %}" class="btn btn-lg btn-block">
+                    <div class="card">
+                        <div class="card-image">
+                            <figure class="image is-4by3">
+                                <img src="{% static 'img/logo-compressed3.jpg' %}" alt="Placeholder image"/>
+                            </figure>
+
+                        </div>
+                        <div class="card-content">
+                            <div class="media">
+                                <div class="media-content">
+                                    <p class="title is-3">Upload photo of car for ⠀exit⠀</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
             </div>
-        </div> -->
-    <div class="col-md-6 d-flex align-items-center">
-      <!-- <div class="card bg-primary"> -->
-        <div class="card-body mx-auto text-center ">
-          <a href="{% url 'recognize:upload_in' %}" class="btn btn-lg btn-block">
-            <img style="width: 100%;"
-              src="{% static 'recognize/logo-compressed2.jpg' %}"
-              title="Upload photo of car for enter"
-              alt="Upload photo of car for enter"
-          /></a>
-          <p>Upload photo of car for enter</p>
         </div>
-      <!-- </div> -->
     </div>
-    <div class="col-md-6 d-flex align-items-center">
-      <!-- <div class="card bg-success"> -->
-        <div class="card-body mx-auto text-center">
-          <a href="{% url 'recognize:session_view' %}?type=1" class="btn btn-lg btn-block"
-            ><img style="width: 100%;"
-              src="{% static 'recognize/logo-compressed3.jpg' %}"
-              title="Upload photo of car for exit"
-              alt="Upload photo of car for exit"
-          /></a>
-          <p>Upload photo of car for exit</p>
-        </div>
-      <!-- </div> -->
-    </div>
-  </div>
 </div>
 {% endblock content %}

@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 
 from .models import ParkingSpace
+from recognize.models import ParkingSession
 
 
 #@login_required
@@ -23,6 +24,24 @@ def index(request):
 
 #@login_required
 def get_parking_spaces(request):
+    if request.user.is_authenticated:
+        user_parking_sessions = ParkingSession.objects.filter(car__owner=request.user, end_session=False)
+
+        parking_spaces_info = []
+        for session in user_parking_sessions:
+            parking_space_info = {
+                'user_parking_number': session.parking_number.number,
+            }
+            parking_spaces_info.append(parking_space_info)
+    else:
+        parking_spaces_info = []
+    print(parking_spaces_info)
+
     parking_spaces = ParkingSpace.objects.all().order_by('id').values('number', 'is_occupied')
-    # print(parking_spaces)
-    return JsonResponse(list(parking_spaces), safe=False)
+    print(parking_spaces)
+
+    response_data = {
+        'user_parking_spaces': parking_spaces_info,
+        'all_parking_spaces': list(parking_spaces),
+    }
+    return JsonResponse(response_data, safe=False)
