@@ -1,4 +1,5 @@
-import os
+
+import json
 
 import cv2
 from django.contrib.auth.decorators import login_required
@@ -9,11 +10,28 @@ from django.contrib import messages
 from django.db.models import Q
 from django.conf import settings
 
+
+from django.utils import timezone,formats
+import os
+import csv
+from datetime import datetime
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import resolve, reverse
+from django.core.files.storage import FileSystemStorage
+from django.contrib import messages
+from django.db.models import Q
+from django.conf import settings
+from django.http import HttpResponseRedirect
+
 from .forms import ImageUploadForm
 from .models import Car, ParkingSession
 from finance.models import Pricing
 from parking_area.models import ParkingSpace
 
+import cv2
 from utils.datascience.main_yolo5 import yolo_predictions, net
 
 
@@ -29,6 +47,8 @@ def upload_out(request):
     resolved_view = resolve(request.path)
     active_menu = resolved_view.app_name
     context = {"active_menu": active_menu, "title": "CVM Recognize"}
+    return render(request, "recognize/upload.html", context)
+
     return render(request, "recognize/upload_out.html", context)
 
 
@@ -120,3 +140,116 @@ def tariff_insert(request):
         default_tariff = Pricing.objects.get(id=1)
         tariff_id = default_tariff.id
     return tariff_id
+
+  
+@login_required
+def session_view(request):
+    # Виконуємо [JOIN] таблиці [Car] з таблицею [ParkingSession] за допомогою [select_related]
+    # де <car> - назва стовпця якiй є iдентифiкатором моделi (таблицi) [Car]
+    # Також виконуємо з'єднання з моделю (таблицею) [CustomUser] через модель (таблицю) [Car]
+    # sessions_parking = ParkingSession.objects.filter(end_session=False).order_by('-start_time')[:20].select_related('car')
+    sessions_parking = ParkingSession.objects.filter(Q(end_session=False) | Q(car__is_blocked=True)
+                                                    ).order_by('-start_time')[:20].select_related('car')
+    # Без зв'язку [related] у моделi [Car] через <owner> було б так:
+    # sessions_parking = ParkingSession.objects.filter(end_session=False).order_by('-start_time')[:20].select_related('car__owner')
+    return render(request, 'recognize/session_view.html', {'sessions_parking': sessions_parking})
+
+
+@login_required
+def session_action(request, pk):
+    if request.method == 'POST':
+        if request.user.is_superuser:
+            if 'close_session' in request.POST:
+                session_parking = get_object_or_404(ParkingSession.objects.select_related('tarif'), id=pk)
+                time_difference_minutes = (timezone.now() - session_parking.start_time).total_seconds() / 60
+                if time_difference_minutes <= session_parking.tarif.free_period:
+                    session_parking.end_session = True
+                    session_parking.save()
+                    parking_space = get_object_or_404(ParkingSpace, id=session_parking.parking_number_id)
+                    parking_space.is_occupied = False
+                    parking_space.save()
+                    messages.success(request, 'Parking has been successfully completed.')
+                else:
+                    messages.error(request, 'The free parking time has been exceeded.')
+            elif 'unblock' in request.POST:
+                session_parking = get_object_or_404(ParkingSession, id=pk)
+                car = get_object_or_404(Car, id=session_parking.car.id)
+                car.is_blocked = False
+                car.save()
+            elif 'ban' in request.POST:
+                session_parking = get_object_or_404(ParkingSession, id=pk)
+                car = get_object_or_404(Car, id=session_parking.car.id)
+                car.is_blocked = True
+                car.save()
+            return HttpResponseRedirect(reverse('recognize:session_view'))
+    return HttpResponseRedirect(reverse('recognize:session_view'))
+
+
+@login_required
+def session_action(request, pk):
+    if request.method == 'POST':
+        if request.user.is_superuser:
+            if 'close_session' in request.POST:
+                session_parking = get_object_or_404(ParkingSession.objects.select_related('tarif'), id=pk)
+                time_difference_minutes = (timezone.now() - session_parking.start_time).total_seconds() / 60
+                if time_difference_minutes <= session_parking.tarif.free_period:
+                    session_parking.end_session = True
+                    session_parking.save()
+                    parking_space = get_object_or_404(ParkingSpace, id=session_parking.parking_number_id)
+                    parking_space.is_occupied = False
+                    parking_space.save()
+                    messages.success(request, 'Parking has been successfully completed.')
+                else:
+                    messages.error(request, 'The free parking time has been exceeded.')
+            elif 'unblock' in request.POST:
+                session_parking = get_object_or_404(ParkingSession, id=pk)
+                car = get_object_or_404(Car, id=session_parking.car.id)
+                car.is_blocked = False
+                car.save()
+            elif 'ban' in request.POST:
+                session_parking = get_object_or_404(ParkingSession, id=pk)
+                car = get_object_or_404(Car, id=session_parking.car.id)
+                car.is_blocked = True
+                car.save()
+            return HttpResponseRedirect(reverse('recognize:session_view'))
+    return HttpResponseRedirect(reverse('recognize:session_view'))
+
+
+def save_to_csv(user, object_data):
+    current_date = datetime.now().strftime("%Y-%m-%d")  # форматує дату у форматі <YYYY-MM-DD>
+    filename = f"{user}-{current_date}.csv"
+    file_path = settings.MEDIA_ROOT / filename
+
+    with open(file_path, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile, delimiter=';')
+        # Записуємо заголовки CSV
+        writer.writerow(['User', 'Email', 'Phone', 'License Plate', 'Status', 'Start parking',
+                         'Number parkingplace', 'Tariff', 'Free Period', 'Payment', 'End parking',
+                         'Close session'])
+        for data in object_data:
+            if data.car.owner:
+                writer.writerow([data.car.owner, data.car.owner.email, data.car.owner.phone_number,
+                                data.car.license_plate, data.car.is_blocked, data.start_time, data.parking_number,
+                                data.tarif.name , data.tarif.free_period, data.total_cost, data.end_time,
+                                data.end_session])
+            else:
+                writer.writerow(["", "", "",
+                                data.car.license_plate, data.car.is_blocked, data.start_time, data.parking_number,
+                                data.tarif.name , data.tarif.free_period, data.total_cost, data.end_time,
+                                data.end_session])
+
+    return filename
+
+
+# Використовується зовнішня функція [save_to_csv], визначена раніше
+@login_required
+def download_csv(request):
+    if request.method == 'POST':
+        if request.user.is_superuser:
+            if 'download_csv' in request.POST:
+                sessions_parking = ParkingSession.objects.all().order_by('start_time').select_related('car')
+                print(sessions_parking)
+                filename = save_to_csv(request.user.username, sessions_parking)
+                messages.success(request, f'The file {filename} was\nsuccessfully saved to the /media directory.')
+            return HttpResponseRedirect(reverse('recognize:session_view'))
+    return HttpResponseRedirect(reverse('recognize:session_view'))

@@ -66,16 +66,11 @@ def tariffs(request):
 
 @login_required
 def tariff_complete(request, tariff_id):
-    # session = get_object_or_404(ParkingSession, id=session_id)
     tariff = get_object_or_404(Pricing, id=tariff_id)
-    print(tariff)
-    print(request.method)
-    print(request.user.is_superuser)
-    print(request.POST.get('end_time'))
     if request.method == 'POST':
         if request.user.is_superuser:
             end_time = request.POST.get('end_time')
-            if end_time == "None" or end_time is None:
+            if end_time == "complete":
                 tariff.end_time = timezone.now()
                 tariff.save()
                 messages.success(request, 'Tariff is been expired.')
@@ -86,7 +81,6 @@ def tariff_complete(request, tariff_id):
     else:
         resolved_view = resolve(request.path)
         active_menu = resolved_view.app_name
-        # context = {'active_menu': active_menu, 'tariff': tariff, 'end_time': tariff.end_time}
         context = {'active_menu': active_menu, 'tariff': tariff}
         return render(request, 'finance/tariff_complete.html', context)
  

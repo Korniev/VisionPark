@@ -11,7 +11,7 @@
 
 <form method="post" action="{% url 'finance:tariff_complete' tariff.id %}">
     {% csrf_token %}
-    <input class="btn btn-danger" type="hidden" name="end_time" value="{{ tariff.end_time }}">
+    <input class="btn btn-danger" type="hidden" name="end_time" value="complete">
     <button class="btn btn-danger" type="submit" name="confirm">Confirm</button>
     <a href="{% url 'finance:tariffs' %}" class="btn btn-primary">Back</a>
 </form>
