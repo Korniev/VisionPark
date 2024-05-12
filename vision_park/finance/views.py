@@ -43,7 +43,7 @@ def payment_preview(request, session_id):
         wasted_time = (timezone.now() - session.start_time).total_seconds() / 60
         cost_per_hour = Decimal(session.tarif.cost_per_hour) if isinstance(session.tarif.cost_per_hour, float) else session.tarif.cost_per_hour
         # Обчислення загальної вартості
-        total_cost = cost_per_hour * Decimal((wasted_time - session.tarif.free_period) / 60)
+        total_cost = max(0, cost_per_hour * Decimal((wasted_time - session.tarif.free_period) / 60))
         # Передача даних у контекст шаблону
         context = {'session': session, 'total_cost': total_cost,}
         
@@ -68,6 +68,7 @@ def tariffs(request):
 def tariff_complete(request, tariff_id):
     tariff = get_object_or_404(Pricing, id=tariff_id)
     if request.method == 'POST':
+        print(request.POST)
         if request.user.is_superuser:
             end_time = request.POST.get('end_time')
             if end_time == "complete":

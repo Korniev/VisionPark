@@ -78,6 +78,21 @@ def upload_in(request):
 
 
 @login_required
+def tariff_insert(request):
+    # Отримуємо тариф з найбільшим <start_time>, де <end_time> є [None]
+    tariff = Pricing.objects.filter(Q(end_time__isnull=True)).order_by('-start_time').first()
+    # Якщо такий тариф існує, отримуємо його <id>
+    if tariff:
+        tariff_id = tariff.id
+    else:
+        # Якщо такий тариф не знайдено, беремо тариф з <id> = 1 за замовчуванням
+        default_tariff = Pricing.objects.get(id=1)
+        tariff_id = default_tariff.id
+    return tariff_id
+
+
+# Використовується зовнішня функція [tariff_insert], визначена раніше
+@login_required
 def create_parking_session(request):
     if request.method == 'POST':
         # uploaded_file_url = request.POST.get('uploaded_file_url')
@@ -101,7 +116,6 @@ def create_parking_session(request):
             # Створити новий запис про початок парковочної сесiї
             tarif_id = tariff_insert(request)
             parking_session = ParkingSession(car=car, parking_number=parking_space, tarif_id=tarif_id)
-            print(parking_session)
             parking_session.save()
             # Оновлюємо статус парковочного місця
             parking_space.is_occupied = True
@@ -117,20 +131,6 @@ def create_parking_session(request):
 
     else:
         return redirect('recognize:upload_in')
-
-
-@login_required
-def tariff_insert(request):
-    # Отримуємо тариф з найбільшим <start_time>, де <end_time> є [None]
-    tariff = Pricing.objects.filter(Q(end_time__isnull=True)).order_by('-start_time').first()
-    # Якщо такий тариф існує, отримуємо його <id>
-    if tariff:
-        tariff_id = tariff.id
-    else:
-        # Якщо такий тариф не знайдено, беремо тариф з <id> = 1 за замовчуванням
-        default_tariff = Pricing.objects.get(id=1)
-        tariff_id = default_tariff.id
-    return tariff_id
 
 
 @login_required
@@ -150,35 +150,6 @@ def session_view(request):
 def session_action(request, pk):
     if request.method == 'POST':
         if request.user.is_superuser:
-            # if 'close_session' in request.POST:
-            #     session_parking = get_object_or_404(ParkingSession.objects.select_related('tarif'), id=pk)
-            #     time_difference_minutes = (timezone.now() - session_parking.start_time).total_seconds() / 60
-            #     time_outgoing_minutes = (timezone.now() - session_parking.end_time).total_seconds() / 60
-            #     if time_difference_minutes <= session_parking.tarif.free_period:
-            #         session_parking.end_session = True
-            #         session_parking.save()
-            #         parking_space = get_object_or_404(ParkingSpace, id=session_parking.parking_number_id)
-            #         parking_space.is_occupied = False
-            #         parking_space.save()
-            #         messages.success(request, 'Parking has been successfully completed.')
-            #     else:
-            #         if session_parking.total_cost:
-            #             if time_outgoing_minutes <= 5:
-            #                 session_parking.end_session = True
-            #                 session_parking.save()
-            #                 parking_space = get_object_or_404(ParkingSpace, id=session_parking.parking_number_id)
-            #                 parking_space.is_occupied = False
-            #                 parking_space.save()
-            #                 messages.success(request, 'Parking has been successfully completed.')
-            #             else:
-            #                 session_parking.end_session = True
-            #                 session_parking.save()
-            #                 parking_space = get_object_or_404(ParkingSpace, id=session_parking.parking_number_id)
-            #                 parking_space.is_occupied = False
-            #                 parking_space.save()
-            #                 messages.warning(request, 'Attention! checkout time limit exceeded.')
-            #         else:
-            #             messages.error(request, 'The free parking time has been exceeded.')
             if 'close_session' in request.POST:
                 session_parking = get_object_or_404(ParkingSession.objects.select_related('tarif'), id=pk)
                 parking_space = get_object_or_404(ParkingSpace, id=session_parking.parking_number_id)
