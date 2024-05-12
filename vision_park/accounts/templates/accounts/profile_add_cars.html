@@ -39,7 +39,7 @@ Profile
       <form method="post" action="{% url 'accounts:profile' %}" name="add_license_plate">
         {% csrf_token %}
         <tr>
-            <th><button type="submit">Add My License Plate</button></th>
+            <th><button type="submit", class="button is-link" style="background: #125C13">Add My License Plate</button></th>
             <td>
               <select name="add_license_plate">
                 {% for car in available_cars %}
