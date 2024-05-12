@@ -1,4 +1,3 @@
-
 import json
 
 import cv2
@@ -10,12 +9,10 @@ from django.contrib import messages
 from django.db.models import Q
 from django.conf import settings
 
-
-from django.utils import timezone,formats
+from django.utils import timezone, formats
 import os
 import csv
 from datetime import datetime
-
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
@@ -141,7 +138,7 @@ def tariff_insert(request):
         tariff_id = default_tariff.id
     return tariff_id
 
-  
+
 @login_required
 def session_view(request):
     # Виконуємо [JOIN] таблиці [Car] з таблицею [ParkingSession] за допомогою [select_related]
@@ -149,7 +146,7 @@ def session_view(request):
     # Також виконуємо з'єднання з моделю (таблицею) [CustomUser] через модель (таблицю) [Car]
     # sessions_parking = ParkingSession.objects.filter(end_session=False).order_by('-start_time')[:20].select_related('car')
     sessions_parking = ParkingSession.objects.filter(Q(end_session=False) | Q(car__is_blocked=True)
-                                                    ).order_by('-start_time')[:20].select_related('car')
+                                                     ).order_by('-start_time')[:20].select_related('car')
     # Без зв'язку [related] у моделi [Car] через <owner> було б так:
     # sessions_parking = ParkingSession.objects.filter(end_session=False).order_by('-start_time')[:20].select_related('car__owner')
     return render(request, 'recognize/session_view.html', {'sessions_parking': sessions_parking})
@@ -162,6 +159,7 @@ def session_action(request, pk):
             if 'close_session' in request.POST:
                 session_parking = get_object_or_404(ParkingSession.objects.select_related('tarif'), id=pk)
                 time_difference_minutes = (timezone.now() - session_parking.start_time).total_seconds() / 60
+                #TODO
                 if time_difference_minutes <= session_parking.tarif.free_period:
                     session_parking.end_session = True
                     session_parking.save()
@@ -229,14 +227,14 @@ def save_to_csv(user, object_data):
         for data in object_data:
             if data.car.owner:
                 writer.writerow([data.car.owner, data.car.owner.email, data.car.owner.phone_number,
-                                data.car.license_plate, data.car.is_blocked, data.start_time, data.parking_number,
-                                data.tarif.name , data.tarif.free_period, data.total_cost, data.end_time,
-                                data.end_session])
+                                 data.car.license_plate, data.car.is_blocked, data.start_time, data.parking_number,
+                                 data.tarif.name, data.tarif.free_period, data.total_cost, data.end_time,
+                                 data.end_session])
             else:
                 writer.writerow(["", "", "",
-                                data.car.license_plate, data.car.is_blocked, data.start_time, data.parking_number,
-                                data.tarif.name , data.tarif.free_period, data.total_cost, data.end_time,
-                                data.end_session])
+                                 data.car.license_plate, data.car.is_blocked, data.start_time, data.parking_number,
+                                 data.tarif.name, data.tarif.free_period, data.total_cost, data.end_time,
+                                 data.end_session])
 
     return filename
 
