@@ -47,24 +47,25 @@ Profile
       <form method="post" action="{% url 'accounts:profile' %}">
         {% csrf_token %}
         <tr>
-            <th><button type="submit">Add My License Plate</button></th>
-            <td>
-              <select name="car_license_plate">
-                {% for car in available_cars %}
-                  <option value="{{ car.license_plate }}">{{ car.license_plate }}</option>
-                {% empty %}
-                  <option value="">No available cars</option>
-                {% endfor %}
-              </select>
-            </td>
+
+            <th>
+                <select name="car_license_plate">
+                    {% for car in available_cars %}
+                    <option value="{{ car.license_plate }}">{{ car.license_plate }}</option>
+                    {% empty %}
+                    <option value="">No available cars</option>
+                    {% endfor %}
+                </select>
+            </th>
+            <th><button class="button is-link" style="background: #125C13" type="submit">Add My License Plate</button></th>
         </tr>
       </form>
     </table>
   </div>
 
-<h2>User cars</h2>
+<h2 class="title is-2">User cars</h2>
 {% if user_cars %}
-  <table>
+    <table class="table is-fullwidth">
     <thead>
       <tr>
         <th>Number plate</th>
