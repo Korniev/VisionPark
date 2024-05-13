@@ -2,7 +2,7 @@ services:
   app:
     build: .
     command:
-      /usr/local/bin/wait-for-it.sh db:5432 -- python3 vision_park/manage.py runserver 0.0.0.0:8000
+      /bin/sh -c "/usr/local/bin/wait-for-it.sh db:5432 -- python3 /app/vision_park/manage.py migrate --noinput && python3 /app/vision_park/manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh
       - ./:/app
