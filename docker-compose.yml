@@ -17,10 +17,10 @@ services:
     image: postgres:14.8-alpine
     environment:
       POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
-      POSTGRES_DB: "postgres_local"
+      POSTGRES_PASSWORD: "1234"
+      POSTGRES_DB: "vision_park_db"
     expose:
       - "5432"
     ports:
-      - "5433:5432"
+      - "5432:5432"
     restart: always
