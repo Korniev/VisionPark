@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 datascience_path = os.path.join(BASE_DIR, 'datascience')
 
 model_path = os.path.join(datascience_path, 'best.onnx')
-image_path = os.path.join(datascience_path, 'img/foto/ind2.jpeg')
+image_path = os.path.join(datascience_path, 'img/photo_test/ind2.jpeg')
 
 net = cv2.dnn.readNetFromONNX(model_path)
 img = io.imread(image_path)
