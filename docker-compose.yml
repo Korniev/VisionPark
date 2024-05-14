@@ -28,7 +28,7 @@ services:
   bot:
     build: .
     command:
-      sh -c "python3 /app/aiogram/run.py"
+      sh -c "python3 /app/vision_park/accounts/run.py"
     volumes:
       - ./:/app
     depends_on:
