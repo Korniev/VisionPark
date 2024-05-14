@@ -1,6 +1,6 @@
 
 body {
-    font-family: 'lato', sans-serif;
+
 }
 
 body ul {
@@ -61,11 +61,21 @@ h1, .h1, h2, .h2, h3, .h3 {
 }
 
 /* manually */
-
-.sidebar ul a i {
-    margin-right: 16px;
+.sidebar {
+    padding: 20px;
 }
 
+.sidebar ul a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 5px 0;
+}
+
+.sidebar ul a i {
+    font-size: 30px;
+    color: #fff;
+}
 .sidebar .nav-pills li:hover {
     background-color: #485070;
 }
@@ -102,6 +112,10 @@ h1, .h1, h2, .h2, h3, .h3 {
 .bi {
     vertical-align: -.125em;
     fill: currentColor;
+}
+
+.nav-link:hover {
+    color: #fff !important;
 }
 
 .nav-scroller {
@@ -168,7 +182,7 @@ footer .icon {
 .space {
     width: 10%;
     height: 45%;
-    background-color: #969696;
+    background-color: #B9B9B9;
     border: 5px solid #ffffff;
     position: absolute;
     box-sizing: border-box;
