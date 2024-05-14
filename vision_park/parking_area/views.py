@@ -1,12 +1,11 @@
-from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
-
-from .models import ParkingSpace
 from recognize.models import ParkingSession
 
+from .models import ParkingSpace
 
-#@login_required
+
+# @login_required
 def index(request):
     parking_spaces = ParkingSpace.objects.all()
 
@@ -35,10 +34,8 @@ def get_parking_spaces(request):
             parking_spaces_info.append(parking_space_info)
     else:
         parking_spaces_info = []
-    print(parking_spaces_info)
 
     parking_spaces = ParkingSpace.objects.all().order_by('id').values('number', 'is_occupied')
-    print(parking_spaces)
 
     response_data = {
         'user_parking_spaces': parking_spaces_info,
