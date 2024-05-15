@@ -8,4 +8,4 @@ main = ReplyKeyboardMarkup(keyboard=[
     resize_keyboard=True,
     input_field_placeholder='waiting for a menu item...')
 
-link_website = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='Open website', url='http://127.0.0.1:8000/auth/profile/')]])
+link_website = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='Open website', url='http://0.0.0.0:8000/')]])
