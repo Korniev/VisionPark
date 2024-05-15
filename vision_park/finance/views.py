@@ -1,17 +1,14 @@
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import Decimal
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone, formats
 from django.urls import resolve, reverse
-from django.http import HttpResponseRedirect
-from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
 
 from .forms import TariffForm
 from .models import Pricing
 from recognize.models import Car, ParkingSession
-
 
 
 @login_required
@@ -21,7 +18,8 @@ def payments_user(request):
     car = Car.objects.filter(owner=request.user)
     sessions = ParkingSession.objects.filter(car__in=car).order_by('-start_time')
     # sessions = ParkingSession.objects.filter(car__in=car).select_related('tarif')
-    return render(request, 'finance/payments_user.html', {"active_menu": active_menu, "title": "Finance", "sessions": sessions})
+    return render(request, 'finance/payments_user.html',
+                  {"active_menu": active_menu, "title": "Finance", "sessions": sessions})
 
 
 @login_required
@@ -39,14 +37,12 @@ def payment_preview(request, session_id):
             messages.error(request, 'Ви не можете підтвердити оплату для цього сеансу паркування.')
             return redirect(to='finance:payment_preview', session_id=session_id)
     else:
-        # Обчислення пройденого часу у хвилинах
         wasted_time = (timezone.now() - session.start_time).total_seconds() / 60
-        cost_per_hour = Decimal(session.tarif.cost_per_hour) if isinstance(session.tarif.cost_per_hour, float) else session.tarif.cost_per_hour
-        # Обчислення загальної вартості
+        cost_per_hour = Decimal(session.tarif.cost_per_hour) if isinstance(session.tarif.cost_per_hour,
+                                                                           float) else session.tarif.cost_per_hour
         total_cost = max(0, cost_per_hour * Decimal((wasted_time - session.tarif.free_period) / 60))
-        # Передача даних у контекст шаблону
-        context = {'session': session, 'total_cost': total_cost,}
-        
+        context = {'session': session, 'total_cost': total_cost, }
+
         return render(request, 'finance/payment_preview.html', context)
 
 
@@ -84,14 +80,14 @@ def tariff_complete(request, tariff_id):
         active_menu = resolved_view.app_name
         context = {'active_menu': active_menu, 'tariff': tariff}
         return render(request, 'finance/tariff_complete.html', context)
- 
+
 
 @login_required
 def tariff_add(request):
     if request.method == 'POST':
         if request.user.is_superuser:
             form = TariffForm(request.POST)
-            if form.is_valid():      
+            if form.is_valid():
                 current_time = timezone.now()
                 start_of_day = current_time.replace(hour=0, minute=0, second=1)
                 tariff = form.save(commit=False)

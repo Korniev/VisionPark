@@ -1,7 +1,6 @@
 from django.db import models
 
 
-
 class Pricing(models.Model):
     name = models.CharField(max_length=50)
     free_period = models.PositiveIntegerField()

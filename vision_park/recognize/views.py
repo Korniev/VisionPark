@@ -70,8 +70,8 @@ def upload_in(request):
                 })
             except AttributeError:
                 return render(request, 'recognize/result_in.html',
-                    {'messages': ['The CV model could not recognize anything.'],
-                    'recognized_area': '', 'recognized_image': '', 'recognized_text': ''})
+                              {'messages': ['The CV model could not recognize anything.'],
+                               'recognized_area': '', 'recognized_image': '', 'recognized_text': ''})
     else:
         form = ImageUploadForm()
     return render(request, 'recognize/upload_in.html', {'form': form})
@@ -79,37 +79,30 @@ def upload_in(request):
 
 @login_required
 def tariff_insert(request):
-    # Отримуємо тариф з найбільшим <start_time>, де <end_time> є [None]
     tariff = Pricing.objects.filter(Q(end_time__isnull=True)).order_by('-start_time').first()
-    # Якщо такий тариф існує, отримуємо його <id>
     if tariff:
         tariff_id = tariff.id
     else:
-        # Якщо такий тариф не знайдено, беремо тариф з <id> = 1 за замовчуванням
         default_tariff = Pricing.objects.get(id=1)
         tariff_id = default_tariff.id
     return tariff_id
 
 
-# Використовується зовнішня функція [tariff_insert], визначена раніше
 @login_required
 def create_parking_session(request):
     if request.method == 'POST':
         # uploaded_file_url = request.POST.get('uploaded_file_url')
         license_plate = request.POST.get('recognized_text')
-        # Знайти або створити новий автомобіль за номером
         car, created = Car.objects.get_or_create(license_plate=license_plate)
         if car.is_blocked:
             messages.error(request, 'This Сar is not allowed to enter the parking\n"Ase of Base".')
             return render(request, 'recognize/result_in.html')
 
-        # Перевіряємо, чи існує активний запис ParkingSession з таким номером
         active_session_exists = ParkingSession.objects.filter(car=car, end_session=False).exists()
         if active_session_exists:
             messages.error(request, 'The Parking Session for this Car is already open.')
             return render(request, 'recognize/result_in.html')
 
-        # Отримати доступне паркомiсце
         parking_space = ParkingSpace.get_available_space()
 
         if parking_space:
@@ -154,7 +147,7 @@ def session_action(request, pk):
                 session_parking = get_object_or_404(ParkingSession.objects.select_related('tarif'), id=pk)
                 parking_space = get_object_or_404(ParkingSpace, id=session_parking.parking_number_id)
                 time_difference_minutes = (timezone.now() - session_parking.start_time).total_seconds() / 60
-                
+
                 if time_difference_minutes <= session_parking.tarif.free_period:
                     session_parking.end_session = True
                     parking_space.is_occupied = False
@@ -216,7 +209,6 @@ def save_to_csv(user, object_data):
     return filename
 
 
-# Використовується зовнішня функція [save_to_csv], визначена раніше
 @login_required
 def download_csv(request):
     if request.method == 'POST':

@@ -21,7 +21,7 @@ def index(request):
     return render(request, 'parking_area/parking_area.html', context=data)
 
 
-#@login_required
+# @login_required
 def get_parking_spaces(request):
     if request.user.is_authenticated:
         user_parking_sessions = ParkingSession.objects.filter(car__owner=request.user, end_session=False)

@@ -7,7 +7,6 @@ import plotly.express as px
 from skimage import io
 import pytesseract
 
-# settings
 INPUT_WIDTH = 640
 INPUT_HEIGHT = 640
 
@@ -122,7 +121,8 @@ def extract_text(image, bbox):
 
 # test
 results = yolo_predictions(img, net)
-"""
+
+""" code just for visualise the result
 fig = px.imshow(results)
 fig.update_layout(width=800, height=700, margin=dict(l=10, r=10, b=10, t=10))
 fig.update_xaxes(showticklabels=False).update_yaxes(showticklabels=False)
