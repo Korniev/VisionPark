@@ -9,7 +9,9 @@ Session History
 {% csrf_token %}
 <h2 class="title is-2">Session History</h2>
 
-<div class="table-container" style=" margin-top: 30px;">
+<div class="container" style=" margin-top: 30px;">
+
+    {% if sessions %}
     <table class="table is-fullwidth">
         <thead>
         <tr>
@@ -36,11 +38,13 @@ Session History
             <td>{{ session.tarif.name }}</td>
             <td>{{ session.total_cost }}</td>
         </tr>
-        {% empty %}
-        <p>Session history is empty.</p>
         {% endfor %}
         </tbody>
     </table>
+
+    {% else %}
+    <h3 class="title is-3">No session has been implemented</h3>
+    {% endif %}
 </div>
 
 

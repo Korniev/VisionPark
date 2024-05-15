@@ -7,6 +7,7 @@ List All Parking Sessions
 {% block content %}
 {% load static %}
 
+<div class="container" style=" margin-top: 30px;">
 {% if user.is_superuser %}
 
 <h2 class="title is-2">List All Parking Sessions</h2>
@@ -30,95 +31,75 @@ List All Parking Sessions
     </tr>
 </table>
 <br>
+{% if sessions_parking %}
+<table class="table">
+    <tr>
+        <th>User</th>
+        <th>License Plate</th>
+        <th>Status</th>
+        <th>Start parking</th>
+        <th>Number parkingplace</th>
+        <th>Payment</th>
+        <th>End parking</th>
+        <th>Close session</th>
+        <th>Actions</th>
+    </tr>
+    {% for session_parking in sessions_parking %}
+    <tr>
+        <td>{{ session_parking.car.owner }}</td>
+        <td>{{ session_parking.car.license_plate }}</td>
+        <td>{% if session_parking.car.is_blocked %}Blocked{% else %}Unblocked{% endif %}</td>
+        <td>{{ session_parking.start_time }}</td>
+        <td>{{ session_parking.parking_number }}</td>
+        <td>{{ session_parking.total_cost }}</td>
+        <td>{{ session_parking.end_time|default:"" }}</td>
+        <td>
+            {% if not session_parking.end_session %}
+            <form method="post" action="{% url 'recognize:session_action' session_parking.id %}"
+                  name="close_session">
+                {% csrf_token %}
+                <input type="hidden" name="close_session" value="close_session">
+                <button class="button is-warning" type="submit">Close session</button>
+            </form>
+            {% else %}
+            {{ session_parking.end_session }}
+            {% endif %}
+            </td>
+        <td>
 
-    {% if user.is_superuser %}
-    <h2>List All Parking Sessions:</h2>
-        <br>
-        <table class="table">
-            <tr>
-                <tr>
-                    <th colspan="2">For download all parking sessions click</th>
-                </tr>
-                <tr>
-                    <th>
-                        <form method="post" action="{% url 'recognize:download_csv' %}"
-                              name="download_csv">
-                            {% csrf_token %}
-                            <input class="btn btn-secondary" type="hidden" name="download_csv" value="download_csv">
-                            <button class="btn btn-secondary" type="submit">Save as CSV</button>
-                        </form>
-                    </th>
-                </tr>
-            </tr>
-        </table>
-        <br>
-        {% if sessions_parking %}
-            <table class="table">
-                    <tr>
-                        <th>User</th>
-                        <th>License Plate</th>
-                        <th>Status</th>   
-                        <th>Start parking</th>
-                        <th>Number parkingplace</th>
-                        <th>Payment</th>
-                        <th>End parking</th>
-                        <th>Close session</th>
-                        <th>Actions</th>
-                    </tr>
-                {% for session_parking in sessions_parking %}
-                <tr>
-                    <td>{{ session_parking.car.owner }}</td>
-                    <td>{{ session_parking.car.license_plate }}</td>
-                    <td>{% if session_parking.car.is_blocked %}Blocked{% else %}Unblocked{% endif %}</td>
-                    <td>{{ session_parking.start_time }}</td>
-                    <td>{{ session_parking.parking_number }}</td>
-                    <td>{{ session_parking.total_cost }}</td>
-                    <td>{{ session_parking.end_time|default:"" }}</td>
-                    <td>{{ session_parking.end_session }}</td>
-                    <td>
-                        {% if not session_parking.end_session %}
-                            <form method="post" action="{% url 'recognize:session_action' session_parking.id %}"
-                                    name="close_session">
-                                {% csrf_token %}
-                                <input class="btn btn-warning" type="hidden" name="close_session" value="close_session">
-                                <button class="btn btn-warning" type="submit">Close session</button>
-                            </form>
-                        {% endif %}
-                        {% if session_parking.car.is_blocked %}
-                            <form method="post" action="{% url 'recognize:session_action' session_parking.id %}"
-                                    name="unblock">
-                                {% csrf_token %}
-                                <input class="btn btn-success" type="hidden" name="unblock" value="unblock">
-                                <button class="btn btn-success" type="submit">Unblock</button>
-                            </form>
-                        {% else %}
-                            <form method="post" action="{% url 'recognize:session_action' session_parking.id %}"
-                                    name="ban">
-                                {% csrf_token %}
-                                <input class="btn btn-danger" type="hidden" name="ban" value="ban">
-                                <button class="btn btn-danger" type="submit">To banned</button>
-                            </form>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
-        {% else %}
-            <p>There are no data</p>
-        {% endif %}
-        {% if messages %}
-            <div style="width: 25%; margin: 0 auto;">
-                <ul class="messages">
-                    {% for message in messages %}
-                        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
+            {% if session_parking.car.is_blocked %}
+            <form method="post" action="{% url 'recognize:session_action' session_parking.id %}"
+                  name="unblock">
+                {% csrf_token %}
+                <input type="hidden" name="unblock" value="unblock">
+                <button class="button is-link" style="background: #125C13" type="submit">Unblock</button>
+            </form>
+            {% else %}
+            <form method="post" action="{% url 'recognize:session_action' session_parking.id %}"
+                  name="ban">
+                {% csrf_token %}
+                <input type="hidden" name="ban" value="ban">
+                <button class="button is-danger" type="submit">Ban</button>
+            </form>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+    <h3 class="title is-3">There are no data</h3>
+{% endif %}
 
-    {% else %}
-    <p>There are no data</p>
-    {% endif %}
+
+
+{% for message in messages %}
+<article class="message is-primary">
+  <div class="message-body">
+{{ message }}
+  </div>
+</article>
+{% endfor %}
+
 </div>
 
 {% else %}
