@@ -13,9 +13,9 @@ Profile
 {% endif %}
 
 <h2 class="title is-2">Profile</h2>
-  <div class="container" id="photo_result">
+<div class="container" id="photo_result">
     <table class="table">
-      <tbody>
+        <tbody>
         <tr>
             <th>Username:</th>
             <td>{{ user_profile.username }}</td>
@@ -26,74 +26,83 @@ Profile
         </tr>
         <tr>
             <th>Phone Number:</th>
-            <td>{{ user_profile.phone_number }}</td>
+            <td>
+                {{ user_profile.phone_number }}
+            </td>
         </tr>
         <tr>
             <th>Telegram Alias:</th>
-            <td>{{ user_profile.telegram_nickname }}</td>
-            <a type="button" class="btn btn-primary" href="https://t.me/tegfhdbvj_bot?start={{ user_profile.username }}"><i class="bi bi-telegram"></i> Connect Telegram</a>
+            <td>
+                <a type="button" class="btn btn-primary"
+                   href="https://t.me/tegfhdbvj_bot?start={{ user_profile.username }}"><i class="bi bi-telegram"></i>
+                    Start</a>
+                {{ user_profile.telegram_nickname }}
+            </td>
         </tr>
-      </tbody>
+        </tbody>
     </table>
     <br>
     <table class="table">
-      <form method="post" action="{% url 'accounts:profile' %}" name="add_license_plate">
-        {% csrf_token %}
-        <tr>
-            <th><button type="submit", class="button is-link" style="background: #125C13">Add My License Plate</button></th>
-            <td>
-              <select name="add_license_plate">
-                {% for car in available_cars %}
-                  <option value="{{ car.license_plate }}">{{ car.license_plate }}</option>
-                {% empty %}
-                  <option value="">No available cars</option>
-                {% endfor %}
-              </select>
-            </td>
-        </tr>
-      </form>
+        <form method="post" action="{% url 'accounts:profile' %}" name="add_license_plate">
+            {% csrf_token %}
+            <tr>
+                <th>
+                    <button type="submit" , class="button is-link" style="background: #125C13">Add My License Plate
+                    </button>
+                </th>
+                <td>
+                    <select name="add_license_plate">
+                        {% for car in available_cars %}
+                        <option value="{{ car.license_plate }}">{{ car.license_plate }}</option>
+                        {% empty %}
+                        <option value="">No available cars</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+        </form>
     </table>
-  </div>
+</div>
 
 <h2 class="title is-2">User cars</h2>
 {% if user_cars %}
-    <table class="table is-fullwidth">
+<table class="table is-fullwidth">
     <thead>
-      <tr>
+    <tr>
         <th>Number plate</th>
         <th>Block status</th>
-      </tr>
+    </tr>
     </thead>
     <tbody>
-      {% for car in user_cars %}
-        <tr>
-          <td>{{ car.license_plate }}</td>
-          <td>{% if car.is_blocked %}Blocked{% else %}Unblocked{% endif %}</td>
-          <td>
+    {% for car in user_cars %}
+    <tr>
+        <td>{{ car.license_plate }}</td>
+        <td>{% if car.is_blocked %}Blocked{% else %}Unblocked{% endif %}</td>
+        <td>
             <form method="post" action="{% url 'accounts:profile_action' car.id %}"
                   name="delete_license_plate">
-              {% csrf_token %}
-              <input class="btn btn-danger" type="hidden" name="delete_license_plate" value="delete_license_plate">
-              <button class="btn btn-danger" type="submit">Delete</button>
+                {% csrf_token %}
+                <input class="btn btn-danger" type="hidden" name="delete_license_plate" value="delete_license_plate">
+                <button class="btn btn-danger" type="submit">Delete</button>
             </form>
-          </td>
-        </tr>
-      {% empty %}
-        <tr>
-          <td colspan="2">User has no cars</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% if messages %}
-    {% for message in messages %}
-      <div {% if message.tags %} style="width: 25%;" class="alert alert-{{message.tags}}" {% endif %} role="alert">
-        {{message}}
-      </div>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="2">User has no cars</td>
+    </tr>
     {% endfor %}
-  {% endif %}
+    </tbody>
+</table>
+{% if messages %}
+{% for message in messages %}
+<div {% if message.tags %} style="width: 25%;" class="alert alert-{{message.tags}}" {% endif %} role="alert">
+    {{message}}
+</div>
+{% endfor %}
+{% endif %}
 {% else %}
-  <p>User has no cars</p>
+<p>User has no cars</p>
 {% endif %}
 
 {% endblock %}
