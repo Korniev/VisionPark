@@ -1,7 +1,6 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 
 main = ReplyKeyboardMarkup(keyboard=[
-    [KeyboardButton(text='🚘My cars')],
     [KeyboardButton(text='💲Price'), KeyboardButton(text='🌐Website')],
     [KeyboardButton(text='ℹ️Available parking'), KeyboardButton(text='🙌Support')]
 ],
