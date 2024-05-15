@@ -4,6 +4,7 @@ from aiogram.filters import CommandStart, Command
 from asgiref.sync import sync_to_async
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
+from .config import ADMIN
 
 from accounts.models import CustomUser
 
@@ -46,6 +47,6 @@ async def support_button_pressed(message: types.Message, state=FSMContext):
 async def info_for_support(message: Message, state: FSMContext):
     await state.clear()
     info = message.send_copy(chat_id=message.chat.id)
-    admin_id = 270020739
+    admin_id = ADMIN
     await message.bot.send_message(admin_id,
                                    f"New message from user {message.from_user.username} ({message.from_user.id}):\n\n{message.text}\n\n{info}")
