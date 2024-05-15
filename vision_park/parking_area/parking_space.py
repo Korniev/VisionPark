@@ -5,9 +5,9 @@ from django.db import migrations, models
 
 def create_parking_spaces(apps, schema_editor):
     ParkingSpace = apps.get_model('parking_area', 'ParkingSpace')
-    for letter in ascii_uppercase[:2]:  # Вибираємо перші дві літери "A" та "B"
+    for letter in ascii_uppercase[:2]:
         for i in range(1, 11):
-            number = f"{letter}{i:02}"  # Форматуємо номер у потрібний формат
+            number = f"{letter}{i:02}"
             ParkingSpace.objects.create(number=number)
 
 

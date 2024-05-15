@@ -1,4 +1,4 @@
-from django.utils import timezone, formats
+from django.utils import timezone
 import os
 import csv
 from datetime import datetime
@@ -46,7 +46,6 @@ def upload_in(request):
             try:
                 image_file = request.FILES['image']
                 fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'incoming'))
-                # fs = FileSystemStorage(location='media/incoming/')
                 filename = fs.save(image_file.name, image_file)
 
                 image_path = fs.path(filename)
@@ -91,7 +90,6 @@ def tariff_insert(request):
 @login_required
 def create_parking_session(request):
     if request.method == 'POST':
-        # uploaded_file_url = request.POST.get('uploaded_file_url')
         license_plate = request.POST.get('recognized_text')
         car, created = Car.objects.get_or_create(license_plate=license_plate)
         if car.is_blocked:
@@ -106,19 +104,15 @@ def create_parking_session(request):
         parking_space = ParkingSpace.get_available_space()
 
         if parking_space:
-            # Створити новий запис про початок парковочної сесiї
             tarif_id = tariff_insert(request)
             parking_session = ParkingSession(car=car, parking_number=parking_space, tarif_id=tarif_id)
             parking_session.save()
-            # Оновлюємо статус парковочного місця
             parking_space.is_occupied = True
             parking_space.save()
 
-            # Після оновлення перенаправляємо користувача на ту ж сторінку
             return redirect(to='recognize:main')
 
         else:
-            # Якщо паркомісця немає, показуємо повідомлення про це
             messages.error(request, 'No available parking space.')
             return render(request, 'recognize/result_in.html')
 
@@ -128,14 +122,8 @@ def create_parking_session(request):
 
 @login_required
 def session_view(request):
-    # Виконуємо [JOIN] таблиці [Car] з таблицею [ParkingSession] за допомогою [select_related]
-    # де <car> - назва стовпця якiй є iдентифiкатором моделi (таблицi) [Car]
-    # Також виконуємо з'єднання з моделю (таблицею) [CustomUser] через модель (таблицю) [Car]
-    # sessions_parking = ParkingSession.objects.filter(end_session=False).order_by('-start_time')[:20].select_related('car')
     sessions_parking = ParkingSession.objects.filter(Q(end_session=False) | Q(car__is_blocked=True)
                                                      ).order_by('-start_time')[:20].select_related('car')
-    # Без зв'язку [related] у моделi [Car] через <owner> було б так:
-    # sessions_parking = ParkingSession.objects.filter(end_session=False).order_by('-start_time')[:20].select_related('car__owner')
     return render(request, 'recognize/session_view.html', {'sessions_parking': sessions_parking})
 
 
@@ -184,13 +172,12 @@ def session_action(request, pk):
 
 
 def save_to_csv(user, object_data):
-    current_date = datetime.now().strftime("%Y-%m-%d")  # форматує дату у форматі <YYYY-MM-DD>
+    current_date = datetime.now().strftime("%Y-%m-%d")
     filename = f"{user}-{current_date}.csv"
     file_path = settings.MEDIA_ROOT / filename
 
     with open(file_path, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=';')
-        # Записуємо заголовки CSV
         writer.writerow(['User', 'Email', 'Phone', 'License Plate', 'Status', 'Start parking',
                          'Number parkingplace', 'Tariff', 'Free Period', 'Payment', 'End parking',
                          'Close session'])

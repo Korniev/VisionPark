@@ -8,9 +8,6 @@ from parking_area.models import ParkingSpace
 class Car(models.Model):
     license_plate = models.CharField(max_length=16, unique=True)
     owner = models.ForeignKey(CustomUser, null=True, blank=True, on_delete=models.CASCADE, related_name='cars')
-    # photo_car = models.ForeignKey(Photo, on_delete=models.SET_NULL, null=True)
-    # predict = models.FloatField(null=True)
-    # PayPass = models.BooleanField(default=False)
     is_blocked = models.BooleanField(default=False)
 
     def __str__(self):

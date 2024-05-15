@@ -11,8 +11,6 @@ User = get_user_model()
 class RegisterForm(UserCreationForm):
     username = CharField(max_length=32, min_length=3, required=True, widget=TextInput(attrs={"class": "form-control"}))
     email = EmailField(max_length=64, required=True, widget=EmailInput(attrs={"class": "form-control"}))
-    # first_name = CharField(max_length=32, required=False, widget=TextInput(attrs={"class": "form-control"}))
-    # last_name = CharField(max_length=32, required=False, widget=TextInput(attrs={"class": "form-control"}))
     phone_number = forms.CharField(max_length=13, min_length=13, required=True,
                                    widget=forms.TextInput(
                                        attrs={'placeholder': '+380XXXXXXXXX', "class": "form-control"}))
@@ -24,11 +22,8 @@ class RegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        # model = get_user_model()
         fields = ('username', 'email', 'phone_number', 'telegram_nickname', 'password1', 'password2')
-        # exclude = ['telegram_id', 'cars']
 
-    # It's not just like that
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if User.objects.filter(email=email).exists():
@@ -52,6 +47,5 @@ class LoginForm(AuthenticationForm):
     password = CharField(required=True, widget=PasswordInput(attrs={"class": "form-control"}))
 
     class Meta:
-        # model = User
         model = get_user_model()
         fields = ('username', 'password')
