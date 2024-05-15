@@ -26,11 +26,18 @@ Profile
         </tr>
         <tr>
             <th>Phone Number:</th>
-            <td>{{ user_profile.phone_number }}</td>
+            <td>
+                {{ user_profile.phone_number }}
+            </td>
         </tr>
         <tr>
             <th>Telegram Alias:</th>
-            <td>{{ user_profile.telegram_nickname }}</td>
+            <td>
+                <a type="button" class="btn btn-primary"
+                   href="https://t.me/tegfhdbvj_bot?start={{ user_profile.username }}"><i class="bi bi-telegram"></i>
+                    Start</a>
+                {{ user_profile.telegram_nickname }}
+            </td>
         </tr>
         </tbody>
     </table>
