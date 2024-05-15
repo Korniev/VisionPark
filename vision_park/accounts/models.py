@@ -2,10 +2,6 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-# from cars.models import Car
-# from photos.models import Photo
-
-
 class CustomUser(AbstractUser):
     username = models.CharField(max_length=32, blank=False, unique=True)
     # first_name = models.CharField(max_length=32, required=False)

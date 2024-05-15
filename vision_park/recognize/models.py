@@ -1,14 +1,8 @@
-from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 from accounts.models import CustomUser
 from finance.models import Pricing
 from parking_area.models import ParkingSpace
-
-
-# class IncomingImage(models.Model):
-#     image = models.ImageField(upload_to='incoming/')
-
 
 
 class Car(models.Model):
@@ -21,15 +15,6 @@ class Car(models.Model):
 
     def __str__(self):
         return self.license_plate
-
-    # def save(self, *args, **kwargs):
-    #     if self.photo_car:
-    #         self.car_number = self.photo_car.recognized_car_number
-    #         self.predict = self.photo_car.accuracy
-    #     super().save(*args, **kwargs)
-
-    # def get_absolute_url(self):
-    #     return reverse("car_list", kwargs={"pk": self.pk})
 
 
 class ParkingSession(models.Model):

@@ -1,4 +1,3 @@
-from aiogram.filters import CommandStart
 from aiogram import types, F, Router
 from asgiref.sync import sync_to_async
 
@@ -38,4 +37,3 @@ async def check_available_parking(message: types.Message):
         await message.answer(f"{available_spaces} parking spaces are available.")
     else:
         await message.answer("No available parking spaces.")
-

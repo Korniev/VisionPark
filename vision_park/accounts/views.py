@@ -8,7 +8,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import resolve, reverse
-from django.db.models import Q
 
 from .forms import RegisterForm, LoginForm
 from recognize.models import Car, ParkingSession
@@ -25,7 +24,7 @@ class RegisterView(View):
 
     def get(self, request):
         return render(request, self.template_name, {"title": "Register new user",
-                      "register_form": self.register_form_class})
+                                                    "register_form": self.register_form_class})
 
     def post(self, request):
         register_form = self.register_form_class(request.POST)
@@ -64,7 +63,7 @@ class LogoutView(View):
     def get(self, request):
         username = request.user.username
         logout(request)
-        return render(request, "accounts/logout.html", {"title":"Logout user", "username": username})
+        return render(request, "accounts/logout.html", {"title": "Logout user", "username": username})
         # redirect(to="main")
 
 
@@ -78,7 +77,6 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
         subject_template_name = 'accounts/password_reset_subject.txt'
     except Exception as err:
         print(f"Error sending email: {err}")
-
 
 
 @login_required
@@ -99,7 +97,7 @@ def profile_add_car(request):
                    'available_cars': available_cars}
         return render(request, 'accounts/profile_add_cars.html', context)
 
-    
+
 @login_required
 def profile_action(request, pk):
     if request.method == 'POST':
