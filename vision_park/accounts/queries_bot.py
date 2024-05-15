@@ -1,14 +1,16 @@
 from aiogram.filters import CommandStart
-from aiogram import types
+from aiogram import types, F, Router
 from asgiref.sync import sync_to_async
 
 from finance.models import Pricing
 from parking_area.models import ParkingSpace
-from .handlers import handler_router
+
 from .models import CustomUser
 
+second_router = Router()
 
-@handler_router.message(CommandStart(commands=['mycars']))
+
+@second_router.message(F.text == '🚘My cars')
 async def get_user_cars(message: types.Message):
     username = message.from_user.username
     try:
@@ -20,7 +22,7 @@ async def get_user_cars(message: types.Message):
         await message.answer("User not found. Please register first!")
 
 
-@handler_router.message(CommandStart(commands=['price']))
+@second_router.message(F.text == '💲Price')
 async def get_parking_price(message: types.Message):
     pricing_info = await sync_to_async(Pricing.objects.first)()
     if pricing_info:
@@ -29,7 +31,7 @@ async def get_parking_price(message: types.Message):
         await message.answer("No pricing information available.")
 
 
-@handler_router.message(CommandStart(commands=['available']))
+@second_router.message(F.text == 'ℹ️Available parking')
 async def check_available_parking(message: types.Message):
     available_space = await sync_to_async(ParkingSpace.get_available_space)()
     if available_space:

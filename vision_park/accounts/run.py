@@ -10,6 +10,7 @@ django.setup()
 
 from .config import TOKEN
 from .handlers import handler_router
+from .queries_bot import second_router
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -17,6 +18,7 @@ dp = Dispatcher()
 
 async def main():
     dp.include_router(handler_router)
+    dp.include_router(second_router)
     await dp.start_polling(bot)
 
 
