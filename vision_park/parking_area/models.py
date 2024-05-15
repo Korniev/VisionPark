@@ -8,10 +8,6 @@ class ParkingSpace(models.Model):
     def __str__(self):
         return self.number
 
-    # @classmethod
-    # def get_available_space(cls):
-    #     return cls.objects.filter(is_occupied=False).first()
-
     @classmethod
     def get_available_space(cls):
         sequence = ['A01', 'B02', 'A03', 'B04', 'A05', 'B06', 'A07', 'B08', 'A09', 'B10',

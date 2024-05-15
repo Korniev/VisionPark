@@ -10,8 +10,6 @@ import pytesseract
 INPUT_WIDTH = 640
 INPUT_HEIGHT = 640
 
-# pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 datascience_path = os.path.join(BASE_DIR, 'datascience')
@@ -26,7 +24,6 @@ net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
 
 
 def get_detections(img, net):
-    # 1.CONVERT IMAGE TO YOLO FORMAT
     image = img.copy()
     row, col, d = image.shape
 
@@ -43,7 +40,6 @@ def get_detections(img, net):
 
 
 def non_maximum_supression(input_image, detections):
-    # center x, center y, w , h, conf, proba
     boxes = []
     confidences = []
 
@@ -93,19 +89,14 @@ def drawings(image, boxes_np, confidences_np, index):
     return image
 
 
-# predictions flow with return result
 def yolo_predictions(img, net):
-    # step-1: detections
     input_image, detections = get_detections(img, net)
-    # step-2: NMS
     boxes_np, confidences_np, index = non_maximum_supression(input_image, detections)
-    # step-3: Drawings and text extraction
-    result_img = drawings(input_image, boxes_np, confidences_np, index)  # Make sure you use input_image here if needed
+    result_img = drawings(input_image, boxes_np, confidences_np, index)
     recognized_text = extract_text(result_img, boxes_np[index[0]]) if index.size > 0 else "No number recognized"
     return result_img, recognized_text
 
 
-# extrating text
 def extract_text(image, bbox):
     x, y, w, h = bbox
     roi = image[y:y + h, x:x + w]

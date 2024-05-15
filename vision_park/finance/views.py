@@ -2,8 +2,8 @@ from decimal import Decimal
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.utils import timezone, formats
-from django.urls import resolve, reverse
+from django.utils import timezone
+from django.urls import resolve
 from django.contrib import messages
 
 from .forms import TariffForm
@@ -17,7 +17,6 @@ def payments_user(request):
     active_menu = resolved_view.app_name
     car = Car.objects.filter(owner=request.user)
     sessions = ParkingSession.objects.filter(car__in=car).order_by('-start_time')
-    # sessions = ParkingSession.objects.filter(car__in=car).select_related('tarif')
     return render(request, 'finance/payments_user.html',
                   {"active_menu": active_menu, "title": "Finance", "sessions": sessions})
 

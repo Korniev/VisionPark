@@ -7,7 +7,7 @@ from django.views import View
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.urls import resolve, reverse
+from django.urls import reverse
 
 from .forms import RegisterForm, LoginForm
 from recognize.models import Car, ParkingSession
@@ -117,9 +117,3 @@ def profile_action(request, pk):
             return redirect('accounts:profile')
     else:
         return redirect('accounts:profile')
-
-# @login_required
-# def profile(request):
-#     resolved_view = resolve(request.path)
-#     active_menu = resolved_view.app_name
-#     return render(request, 'accounts/profile.html', {"active_menu": active_menu, "title": "User profile"})
