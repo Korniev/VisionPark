@@ -14,7 +14,7 @@ services:
 
   db:
     container_name: postgres
-    image: postgres:14.8-alpine
+    image: postgres:14.8
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "1234"
@@ -28,7 +28,7 @@ services:
   bot:
     build: .
     command:
-      sh -c "python3 /app/vision_park/accounts/run.py"
+      sh -c "cd /app/vision_park && python3 -m accounts.run"
     volumes:
       - ./:/app
     depends_on:

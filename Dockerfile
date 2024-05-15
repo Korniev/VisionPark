@@ -11,6 +11,11 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
+# Встановлення PYTHONPATH
+ENV PYTHONPATH="/app/vision_park:${PYTHONPATH}"
+# Встановлення Django налаштувань
+ENV DJANGO_SETTINGS_MODULE=vision_park.settings
+
 COPY requirements.txt requirements.txt
 
 RUN pip install --no-cache-dir -r requirements.txt
