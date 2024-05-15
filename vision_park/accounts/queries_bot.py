@@ -33,8 +33,9 @@ async def get_parking_price(message: types.Message):
 
 @second_router.message(F.text == 'ℹ️Available parking')
 async def check_available_parking(message: types.Message):
-    available_space = await sync_to_async(ParkingSpace.get_available_space)()
-    if available_space:
-        await message.answer(f"Parking space {available_space.number} is available.")
+    available_spaces = await sync_to_async(ParkingSpace.objects.filter(is_occupied=False).count)()
+    if available_spaces > 0:
+        await message.answer(f"{available_spaces} parking spaces are available.")
     else:
         await message.answer("No available parking spaces.")
+
