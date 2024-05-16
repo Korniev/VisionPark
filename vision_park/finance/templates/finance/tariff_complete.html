@@ -1,0 +1,55 @@
+{% extends "vision_park/base.html" %}
+
+{% block title %}
+Tariffs Complete Preview
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<h2 class="title is-2">Tariffs Complete Preview</h2>
+
+<div class="table-container" style=" margin-top: 30px;">
+    <table class="table is-fullwidth">
+        <thead>
+        <tr>
+            <th>Tariff name</th>
+            <th>Free period (in minutes)</th>
+            <th>Cost per hour</th>
+            <th>Start of action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ tariff.name }}</td>
+            <td>{{ tariff.free_period }}</td>
+            <td>{{ tariff.cost_per_hour }}</td>
+            <td>{{ tariff.start_time }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<form method="post" action="{% url 'finance:tariff_complete' tariff.id %}">
+    {% csrf_token %}
+    <div class="field is-grouped" style="margin-top: 20px">
+      <input class="btn btn-danger" type="hidden" name="end_time" value="complete">
+    <div class="control">
+      <button class="button is-link" style="background: #125C13" type="submit">Confirm</button>
+    </div>
+    <div class="control">
+      <a class="button is-link is-light" style="background: #d9e7ce; color: #333333" href="{% url 'finance:tariffs' %}"
+         class="btn btn-primary">Back</a>
+    </div>
+  </div>
+</form>
+
+{% for message in messages %}
+<h3 class="justify-content-center" style="margin-left: 0px; margin-bottom: 30px"> {{ message }}</h3>
+{% endfor %}
+
+{% else %}
+<div class="p-2 bg-danger text-white">Viewing is not possible</div>
+{% endif %}
+
+{% endblock content %}

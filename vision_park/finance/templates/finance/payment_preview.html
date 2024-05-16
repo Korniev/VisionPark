@@ -1,0 +1,60 @@
+{% extends "vision_park/base.html" %}
+
+{% block title %}
+Payment preview
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<h2 class="title is-2">Payment preview</h2>
+<div class="table-container" style=" margin-top: 30px;">
+    <table class="table is-fullwidth">
+        <thead>
+        <tr>
+            <th>Session №</th>
+            <th>License Plate</th>
+            <th>Start Date</th>
+            <th>Tariff</th>
+            <th>Cost</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>{{ session.id }}</td>
+            <td>{{ session.car }}</td>
+            <td>{{ session.start_time }}</td>
+            <td>{{ session.tarif.name }}</td>
+            <td>{{ total_cost|floatformat:2 }}</td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+
+<form method="post" action="{% url 'finance:payment_preview' session.id %}">
+    {% csrf_token %}
+    <input class="btn btn-primary" type="hidden" name="total_cost" value="{{ total_cost }}">
+    <div class="field is-grouped" style="margin-top: 20px">
+        <div class="control">
+            <button class="button is-link" style="background: #125C13" type="submit">Confirm</button>
+        </div>
+        <div class="control">
+            <a class="button is-link is-light" style="background: #d9e7ce; color: #333333"
+               href="{% url 'finance:payments_user' %}" class="btn btn-primary">Back</a>
+        </div>
+    </div>
+</form>
+
+{% for message in messages %}
+<article class="message is-danger">
+    <div class="message-body">
+        {{ message }}
+    </div>
+</article>
+{% endfor %}
+{% else %}
+<div class="p-2 bg-danger text-white">Viewing is not possible</div>
+{% endif %}
+
+{% endblock content %}

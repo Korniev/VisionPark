@@ -1,0 +1,117 @@
+{% extends "vision_park/base.html" %}
+
+{% block title %}
+Profile
+{% endblock %}
+
+{% block content %}
+
+{% if form.errors %}
+<div style="width: 25%;" class="alert alert-danger" role="alert">
+    {{ form.non_field_errors}}
+</div>
+{% endif %}
+
+<h2 class="title is-2">Profile</h2>
+<div class="container" id="photo_result">
+    <table class="table">
+        <tbody>
+        <tr>
+            <th>Username:</th>
+            <td>{{ user_profile.username }}</td>
+        </tr>
+        <tr>
+            <th>E-mail Address:</th>
+            <td>{{ user_profile.email }}</td>
+        </tr>
+        <tr>
+            <th>Phone Number:</th>
+            <td>
+                {{ user_profile.phone_number }}
+            </td>
+        </tr>
+        <tr>
+            <th>Telegram Alias:</th>
+            <td>
+                <a type="button" class="btn btn-primary"
+                   href="https://t.me/VisionPark_bot?start={{ user_profile.username }}"><i class="bi bi-telegram"></i>
+                    Start</a>
+                {{ user_profile.telegram_nickname }}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+
+    {% if available_cars %}
+
+    <form method="post" action="{% url 'accounts:profile' %}" name="add_license_plate">
+        {% csrf_token %}
+
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ form.non_field_errors}}
+        </div>
+        {% endif %}
+
+
+        <select name="add_license_plate" style="height: 40px; border-radius: 5px; width: 10%; margin-right: 20px">
+            {% for car in available_cars %}
+            <option value="{{ car.license_plate }}">{{ car.license_plate }}</option>
+            {% empty %}
+            <option value="">No available cars</option>
+            {% endfor %}
+        </select>
+
+
+        <button type="submit" class="button is-link" style="background: #125C13">Add My License Plate
+        </button>
+    </form>
+
+    {% endif %}
+
+
+    <h2 class="title is-2">User cars</h2>
+    {% if user_cars %}
+    <table class="table is-fullwidth">
+        <thead>
+        <tr>
+            <th>Number plate</th>
+            <th>Block status</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for car in user_cars %}
+        <tr>
+            <td>{{ car.license_plate }}</td>
+            <td>{% if car.is_blocked %}Blocked{% else %}Unblocked{% endif %}</td>
+            <td>
+                <form method="post" action="{% url 'accounts:profile_action' car.id %}"
+                      name="delete_license_plate">
+                    {% csrf_token %}
+                    <input class="btn btn-danger" type="hidden" name="delete_license_plate"
+                           value="delete_license_plate">
+                    <button class="button is-danger" type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+    {% else %}
+    <h3 class="title is-3">User has no cars</h3>
+    {% endif %}
+
+    {% if messages %}
+    {% for message in messages %}
+    <div {% if message.tags %} style="width: 25%;" class="alert alert-{{message.tags}}" {% endif %} role="alert">
+        {{message}}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+</div>
+{% endblock %}

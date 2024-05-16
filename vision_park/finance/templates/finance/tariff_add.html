@@ -1,0 +1,51 @@
+{% extends "vision_park/base.html" %}
+
+{% block title %}
+Add New Tariff
+{% endblock %}
+
+{% block content %}
+{% if user.is_superuser %}
+
+
+
+<form class="field" style="width: 50%" method="post" action="{% url 'finance:tariff_add' %}">
+    <h2 class="title is-2">Add New Tariff</h2>
+    {% csrf_token %}
+
+    <label class="label">Name</label>
+
+    <input style="border-color: black" class="control input" type="text" id="name" name="name" required>
+
+
+    <label style="margin-top: 20px" class="label" for="free_period">Free Period (minutes)</label>
+    <input style="border-color: black" class="control input" type="number" id="free_period" name="free_period" required>
+
+    <label style="margin-top: 20px" class="label" for="cost_per_hour">Cost Per Hour</label>
+    <input style="border-color: black" class="control input" type="number" id="cost_per_hour" name="cost_per_hour"
+           step="0.25" required>
+
+
+    <div class="field is-grouped" style="margin-top: 20px">
+        <div class="control">
+            <button class="button is-link" style="background: #125C13" type="submit">Create Tariff</button>
+        </div>
+        <div class="control">
+            <a class="button is-link is-light" style="background: #d9e7ce; color: #333333" href="{% url 'finance:tariffs' %}" class="btn btn-primary">Back</a>
+        </div>
+    </div>
+</form>
+
+{% for message in messages %}
+<article class="message is-danger">
+    <div class="message-body">
+        {{ message }}
+    </div>
+</article>
+{% endfor %}
+{% else %}
+<div class="p-2 bg-danger text-white">Viewing is not possible</div>
+{% endif %}
+
+
+{% endblock content %}

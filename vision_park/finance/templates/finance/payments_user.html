@@ -1,0 +1,55 @@
+{% extends "vision_park/base.html" %}
+
+{% block title %}
+Session History
+{% endblock %}
+
+{% block content %}
+{% if user.is_superuser or user.is_authenticated %}
+{% csrf_token %}
+<h2 class="title is-2">Session History</h2>
+
+<div class="container" style=" margin-top: 30px;">
+
+    {% if sessions %}
+    <table class="table is-fullwidth">
+        <thead>
+        <tr>
+            <th>Session №</th>
+            <th>License Plate</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Tariff</th>
+            <th>Cost</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for session in sessions %}
+        <tr>
+            <td>{{ session.id }}</td>
+            <td>{{ session.car }}</td>
+            <td>{{ session.start_time }}</td>
+            {% if not session.end_time %}
+            <td><a class="button is-danger" href="{% url 'finance:payment_preview' session.id %}">Pay</a></td>
+            {% else %}
+            <td>{{ session.end_time }}</td>
+            {% endif %}
+            <td>{{ session.tarif.name }}</td>
+            <td>{{ session.total_cost }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+    <h3 class="title is-3">No session has been implemented</h3>
+    {% endif %}
+</div>
+
+
+{% else %}
+<div class="p-2 bg-danger text-white">Viewing is not possible</div>
+{% endif %}
+
+{% endblock content %}

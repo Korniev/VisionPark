@@ -1,0 +1,61 @@
+{% extends "vision_park/base.html" %}
+
+{% block title %}
+Registration
+{% endblock %}
+
+{% block content %}
+<h2 class="title is-2" style="width: 50%">Registration</h2>
+
+{% if messages %}
+{% for message in messages %}
+<article class="message is-danger">
+    <div class="message-body">
+        {{ message }}
+    </div>
+</article>
+{% endfor %}
+{% endif %}
+
+{% if form.errors %}
+<article class="message is-danger">
+    <div class="message-body">
+        {{ form.non_field_errors}}
+    </div>
+</article>
+{% endif %}
+
+<form class="field" style="width: 50%" method="post">
+    {% csrf_token %}
+
+    <label class="label">Username</label>
+    {{ register_form.username }}
+    <span>{{ register_form.errors.username }}</span>
+
+    <label style="margin-top: 20px"  class="label">Email</label>
+    {{ register_form.email }}
+    <span>{{ register_form.errors.email }}</span>
+
+    <label style="margin-top: 20px"  class="label">Phone number</label>
+    {{ register_form.phone_number }}
+    <span>{{ register_form.errors.phone_number }}</span>
+
+    <label style="margin-top: 20px"  class="label">Telegram</label>
+    {{ register_form.telegram_nickname }}
+    <span>{{ register_form.errors.telegram_nickname }}</span>
+
+    <label style="margin-top: 20px"  class="label">Password</label>
+    {{ register_form.password1 }}
+    <span>{{ register_form.errors.password1 }}</span>
+
+    <label style="margin-top: 20px"  class="label">Confirm password</label>
+    {{ register_form.password2 }}
+    <span>{{ register_form.errors.password2 }}</span>
+
+    <div class="field is-grouped" style="margin-top: 20px">
+        <div class="control">
+            <button class="button is-link" style="background: #125C13" type="submit">Sign Up</button>
+        </div>
+    </div>
+</form>
+{% endblock %}

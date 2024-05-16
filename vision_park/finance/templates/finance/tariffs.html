@@ -1,0 +1,68 @@
+{% extends "vision_park/base.html" %}
+
+{% block title %}
+Tariffs
+{% endblock %}
+
+{% block content %}
+{% if user.is_superuser %}
+
+<h2 class="title is-2">Tariffs</h2>
+{% csrf_token %}
+
+<div class="container">
+
+<div>
+    <div class="control">
+      <a class="button is-link" style="background: #125C13" href="{% url 'finance:tariff_add' %}">New tariff</a>
+    </div>
+</div>
+    <div class="table-container" style=" margin-top: 30px;">
+        <table class="table is-fullwidth">
+            <thead>
+            <tr>
+                <th>Tariff name</th>
+                <th>Free period (in minutes)</th>
+                <th>Cost per hour</th>
+                <th>Start of action</th>
+                <th>Expiration date</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for tariff in tariffs %}
+            <tr>
+                <td>{{ tariff.name }}</td>
+                <td>{{ tariff.free_period }}</td>
+                <td>{{ tariff.cost_per_hour }}</td>
+                <td>{{ tariff.start_time }}</td>
+
+                {% if not tariff.end_time %}
+                <td><a class="button is-danger" href="{% url 'finance:tariff_complete' tariff.id %}">Complete</a></td>
+                {% else %}
+                <td>{{ tariff.end_time }}</td>
+                {% endif %}
+                {% empty %}
+                <p>No tariff has been implemented.</p>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% for message in messages %}
+<article class="message is-primary">
+  <div class="message-body">
+{{ message }}
+  </div>
+</article>
+{% endfor %}
+
+
+{% else %}
+<div class="p-2 bg-danger text-white">Viewing is not possible</div>
+{% endif %}
+
+
+
+{% endblock content %}

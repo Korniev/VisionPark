@@ -1,0 +1,196 @@
+
+body {
+
+}
+
+body ul {
+    list-style: none
+}
+
+.container {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+h2 {
+    font-size: 26px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.responsive-table li {
+    border-radius: 3px;
+    padding: 25px 30px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.responsive-table .table-header {
+    background-color: #95A5A6;
+    font-size: 14px;
+    text-transform: uppercase;
+    /*letter-spacing: 0.03em;*/
+}
+
+.responsive-table .table-row {
+    background-color: #ffffff;
+    box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.1);
+}
+
+/* quotes */
+h1, .h1, h2, .h2, h3, .h3 {
+    margin-top: 20px;
+    margin-bottom: 11px;
+}
+
+.header-box {
+    padding-bottom: 40px;
+}
+
+.text-bg-custom {
+    color: #fff;
+    background-color: #504c4c;
+}
+
+/* manually */
+.sidebar {
+    padding: 20px;
+}
+
+.sidebar ul a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 5px 0;
+}
+
+.sidebar ul a i {
+    font-size: 30px;
+    color: #fff;
+}
+.sidebar .nav-pills li:hover {
+    background-color: #485070;
+}
+
+.sidebar ul li a:hover {
+    color: #ccc !important;
+}
+
+/* bootstrap */
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+.b-example-divider {
+    width: 100%;
+    height: 3rem;
+    background-color: rgba(0, 0, 0, .1);
+    border: solid rgba(0, 0, 0, .15);
+    border-width: 1px 0;
+    box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+}
+
+.b-example-vr {
+    flex-shrink: 0;
+    width: 0.2rem;
+    height: 100vh;
+}
+
+.bi {
+    vertical-align: -.125em;
+    fill: currentColor;
+}
+
+.nav-link:hover {
+    color: #fff !important;
+}
+
+.nav-scroller {
+    position: relative;
+    z-index: 2;
+    height: 2.75rem;
+    overflow-y: hidden;
+}
+
+.nav-scroller .nav {
+    display: flex;
+    flex-wrap: nowrap;
+    padding-bottom: 1rem;
+    margin-top: -1px;
+    overflow-x: auto;
+    text-align: center;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+}
+
+.bd-mode-toggle {
+    z-index: 1500;
+}
+
+.bd-mode-toggle .dropdown-menu .active .bi {
+    display: block !important;
+}
+
+
+footer .icon {
+    margin-right: 5px;
+    width: 20px;
+    height: 20px;
+}
+
+.car-num {
+    font-size: x-small;
+    min-height: 20px;
+    margin-bottom: 0;
+}
+
+.car-number {
+    margin-bottom: 0;
+}
+
+.team-short {
+    display: none
+}
+
+.parking_place {
+    width: fit-content;
+    max-width: 80px;
+    text-wrap: nowrap;
+}
+
+
+.parking-lot {
+    width: 100%;
+    height: 60vh;
+    border: 2px solid #333;
+    position: relative;
+}
+
+.space {
+    width: 10%;
+    height: 45%;
+    background-color: #B9B9B9;
+    border: 5px solid #ffffff;
+    position: absolute;
+    box-sizing: border-box;
+}
+
+.messages .danger {
+    color: red;
+}
+
+.messages .success {
+    color: green;
+}
+
+.messages .warning {
+    color: orange;
+}

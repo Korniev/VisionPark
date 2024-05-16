@@ -1,0 +1,46 @@
+{% extends "vision_park/base.html" %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block content %}
+<h2 class="title is-2" style="width: 50%">Login</h2>
+
+{% if messages %}
+{% for message in messages %}
+<article class="message is-danger">
+    <div class="message-body">
+        {{ message }}
+    </div>
+</article>
+{% endfor %}
+{% endif %}
+
+{% if form.errors %}
+<article class="message is-danger">
+    <div class="message-body">
+        {{ form.non_field_errors}}
+    </div>
+</article>
+{% endif %}
+
+<form class="field" style="width: 50%" method="post">
+    {% csrf_token %}
+
+    <label class="label">Username</label>
+    {{form.username}}
+
+    <label style="margin-top: 20px" class="label" for="free_period">Password</label>
+    {{form.password}}
+
+    <div class="field is-grouped" style="margin-top: 20px">
+        <div class="control">
+            <button class="button is-link" style="background: #125C13" type="submit">Confirm</button>
+        </div>
+    </div>
+    <div class="small">
+        <a style="color: #333333" href="{% url 'accounts:password_reset' %}">Forgot Password?</a>
+    </div>
+</form>
+{% endblock %}
