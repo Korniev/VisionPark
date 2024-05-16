@@ -56,8 +56,8 @@ The web service was developed on the basis of the Django framework, the computer
 * ![YOLOv5](https://img.shields.io/badge/yolov5-orange?style=for-the-badge&logo=yolov5&logoColor=white)
 * ![JavaScript](https://img.shields.io/badge/javascript-yellow?style=for-the-badge&logo=javascript&logoColor=white)
 * ![Bootstrap](https://img.shields.io/badge/bootstrap-purple?style=for-the-badge&logo=bootstrap&logoColor=white)
-* ![HTML](https://img.shields.io/badge/html-orange?style=for-the-badge&logo=html&logoColor=white)
-* ![CSS](https://img.shields.io/badge/css-purple?style=for-the-badge&logo=css&logoColor=white)
+* ![HTML](https://img.shields.io/badge/html-orange?style=for-the-badge&logo=html5&logoColor=white)
+* ![CSS](https://img.shields.io/badge/css-purple?style=for-the-badge&logo=css3&logoColor=white)
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
