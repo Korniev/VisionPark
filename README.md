@@ -95,15 +95,31 @@ On Windows:
 venv\Scripts\activate
 ```
 
-5. You should make a docker compose for easy use:
+5. You can make a docker compose for easy use of our application. You should write a following command in the terminal:
 
 ```bash
 docker-compose up --build
 ```
 
-6. Now you can go to your browser and tap http://0.0.0.0:8000
+6. Now you can go to your browser and tap:
 
-We hope you enjoy our web application:)
+```bash
+http://0.0.0.0:8000
+```
+
+8. To stop running docker compose you shoud write next command in terminal:
+
+```bash
+docker-compose stop
+```
+
+8. To remove docker compose you should write next command in terminal:
+
+```bash
+docker-compose down
+```
+
+We hope you enjoy our web application! :)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
