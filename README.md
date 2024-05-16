@@ -82,7 +82,7 @@ cd VisionPark
 3. You can make a docker compose for easy use of our application. You should write a following command in the terminal:
 
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
 4. Now you can go to your browser and tap:
@@ -94,13 +94,13 @@ http://0.0.0.0:8000
 5. To stop running docker compose you shoud write next command in terminal:
 
 ```bash
-docker-compose stop
+docker compose stop
 ```
 
 6. To remove docker compose you should write next command in terminal:
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 We hope you enjoy our web application! :)
