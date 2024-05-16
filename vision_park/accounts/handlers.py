@@ -46,7 +46,6 @@ async def support_button_pressed(message: types.Message, state=FSMContext):
 @handler_router.message(Support.info)
 async def info_for_support(message: Message, state: FSMContext):
     await state.clear()
-    info = message.send_copy(chat_id=message.chat.id)
     admin_id = ADMIN
     await message.bot.send_message(admin_id,
-                                   f"New message from user {message.from_user.username} ({message.from_user.id}):\n\n{message.text}\n\n{info}")
+                                   f"New message from user {message.from_user.username} ({message.from_user.id}):\n\n{message.text}")
