@@ -25,7 +25,7 @@ load_dotenv()  # Завантажує змінні середовища з фа�
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', False).lower() == 'true'
+DEBUG = str(os.environ.get('DEBUG', 'False')).lower() == 'true'
 
 #ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(" ")

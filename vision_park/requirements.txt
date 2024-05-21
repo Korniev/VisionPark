@@ -23,7 +23,7 @@ gitdb==4.0.11
 GitPython==3.1.43
 google-pasta==0.2.0
 grpcio==1.63.0
-gunicorn==22.0.0
+gunicorn==20.1.0
 h5py==3.11.0
 idna==3.7
 imageio==2.34.1
