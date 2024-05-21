@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'vision_park',
-    'vision_park.accounts',
     'accounts.apps.AccountsConfig',
     'finance.apps.FinanceConfig',
     'parking_area.apps.ParkingAreaConfig',
