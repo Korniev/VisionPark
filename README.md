@@ -22,6 +22,9 @@
     <li>
       <a href="#getting-started">Getting Started</a>
     </li>
+    <li>
+      <a href="#show-funcionality">Show funcionality</a>
+    </li>
     <li><a href="#contributors">Contributors</a></li>
   </ol>
 </details>
@@ -108,6 +111,29 @@ docker compose down
 We hope you enjoy our web application! :)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- Show funcionality -->
+## Show funcionality
+
+Parking area visualisation:
+
+![Product Name Screen Shot](https://github.com/Korniev/VisionPark/blob/main/vision_park/vision_park/static/img/Screenshot%202024-06-03%20at%2018.00.17.png)
+
+Car's plate number recognition:
+![Product Name Screen Shot](https://github.com/Korniev/VisionPark/blob/main/vision_park/vision_park/static/img/Screenshot%202024-06-03%20at%2018.00.58.png)
+
+![Product Name Screen Shot](https://github.com/Korniev/VisionPark/blob/main/vision_park/vision_park/static/img/Screenshot%202024-06-03%20at%2018.04.42.png)
+
+Payment and Download CSV analytics:
+![Product Name Screen Shot](https://github.com/Korniev/VisionPark/blob/main/vision_park/vision_park/static/img/Screenshot%202024-06-03%20at%2018.05.07.png)
+
+![Product Name Screen Shot](https://github.com/Korniev/VisionPark/blob/main/vision_park/vision_park/static/img/Screenshot%202024-06-03%20at%2018.04.42.png)
+
+Telegram bot:
+![Product Name Screen Shot](https://github.com/Korniev/VisionPark/blob/main/vision_park/vision_park/static/img/Screenshot%202024-06-03%20at%2018.15.00.png)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 
 <!-- CONTACT -->
 ## Contributors
