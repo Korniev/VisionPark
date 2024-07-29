@@ -4,7 +4,7 @@
   <h3 align="center">VISION PARK</h3>
 
   <p align="center">
-    Parking management system based on computer vision model made by VisionPark Team
+    Parking management system based on computer vision model made by VisionPark Team. Enjoy!:)
     <br />
   </p>
 </div>
@@ -79,6 +79,7 @@ To get installed our web app you should follow these simple steps:
 ```bash
 https://github.com/Korniev/VisionPark
 ```
+
 2. Change to the project's directory:
 ```bash
 cd VisionPark
